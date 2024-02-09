@@ -5,6 +5,7 @@
 - Migrate CLI: para migraciones de base de datos porque los ORM son muy lentos para una fintech
 - Go: para el backend
 - Next.js: para el frontend
+- Postgres:16.1
 
 ## 📦 Herramietas
 
@@ -23,3 +24,8 @@
 ## Informacion
 
 [Data Base Design DOCS](https://dbdocs.io/valrichter/go-ualapp)
+
+## Implementacion
+
+- Se creo la tabla de Usuario
+- Se creo un archivo de migracion para la base de datos
