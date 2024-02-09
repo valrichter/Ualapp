@@ -17,3 +17,13 @@ db_up:
 db_down:
 	# Database down
 	docker exec -it ualapp_postgres dropdb --username=root ualapp
+
+# Run migrations
+DB_URL=postgresql://root:secret@localhost:5432/ualapp?sslmode=disable
+migrate_up:
+	# Migrate up
+	migrate -path backend/db/migrations -database "$(DB_URL)" -verbose up
+
+migrate_down:
+	# Migrate down
+	migrate -path backend/db/migrations -database "$(DB_URL)" -verbose down
