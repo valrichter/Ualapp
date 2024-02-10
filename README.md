@@ -1,6 +1,8 @@
-# 🏦 Ualapp Fintech <img alt="Nextjs" width="30" src="https://devicon-website.vercel.app/api/nextjs/original.svg?color=%23303030" /><img alt="Go" width="30" src="https://devicon-website.vercel.app/api/go/plain.svg?color=%2300ACD7" /><img alt="postgresql" width="30" src="https://devicon-website.vercel.app/api/postgresql/plain.svg?color=%23336791" /><img alt="postgresql" width="35" src="https://devicon-website.vercel.app/api/docker/plain.svg?color=%23019BC6" />
+# 🏦 Ualapp Fintech
 
-## 🔨 Tecnologias usadas
+Pryecto de prueba de concepto de una fintech basada en Next.js y Go
+
+## 🔨 Tecnologias
 
 - **Next.js** v14.1.0
   - Frontend
@@ -8,30 +10,29 @@
   - Backend
 - **Postgres** v16.1-alpine3.19
   - Almacenamiento
-- **Migrate CLI** v4.14.1
-  - Manejar migraciones de base de datos ya que los ORM son muy lentos para una fintech, por lo que es preferible usar SQL puro
 
 ## 📦 Herramietas
 
+- **Migrate** v4.14.1
+  - Manejar migraciones de base de datos ya que los ORM son muy lentos para una fintech, por lo que es preferible usar SQL puro
 - **sqlc** v1.25.0
   - SQL compiler
   - **Input**: Se escribe la consulta en SQL ---> **Blackbox**: [sqlc] ---> **Output**: Funciones en Golang con interfaces para poder utilizarlas y hacer consultas
 
-## 🚀 Proyecto
+## 📌 Proyecto
 
-- CRUD de Usuarios
-- Autenticacion
-  - Verficar la identidad de los usuarios
-- Implemetacion del Registry de usuarios
+- CRUD de usuarios
+- Autenticacion y verificacion la identidad de los usuarios
+- Implemetacion del Registro de usuarios
 - Implemetacion del Login de usuarios
-- Hashing y verificacion de contrasenias
+- Hashing y verificacion de contraseñas
 - Encriptacion y desencriptacion con JWT
 
-## Informacion
+## 📚 Documentacion
 
-[Data Base Design DOCS](https://dbdocs.io/valrichter/go-ualapp)
+- [Data Base Design (DER)](https://dbdocs.io/valrichter/go-ualapp)
 
-## Implementacion
+## 🚀 Desarrollo
 
 - Diseño de la tabla de Usuario
 - Creacion de los archivos sql de migracion para la base de datos
