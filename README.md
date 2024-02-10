@@ -5,11 +5,11 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 ## 🔨 Tecnologias
 
 - **Next.js** v14.1.0
-  - Frontend
-- **Go** v1.22.0 linux/amd64
-  - Backend
-- **Postgres** v16.1-alpine3.19
-  - Almacenamiento
+- **Go** v1.22.0
+- **PostgreSQL** v16.1
+- **Docker** v25.0.3
+- **Docker Compose** v2.24.5
+- **Make** v4.3
 
 ## 📦 Herramietas
 
@@ -38,3 +38,5 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 - Creacion de los archivos sql de migracion para la base de datos
 - Implementacion de docker compose para levantar el servicio de postgres
 - Automatizacion de comandos con Makefile para ejecutar el contenedor de postgres, crear la base de datos e insertar las tablas
+
+---
