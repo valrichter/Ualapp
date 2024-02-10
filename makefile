@@ -27,3 +27,7 @@ migrate_up:
 migrate_down:
 	# Migrate down
 	migrate -path backend/db/migrations -database "$(DB_URL)" -verbose down
+
+sqlc:
+	# Run sqlc
+	cd backend && sqlc generate
