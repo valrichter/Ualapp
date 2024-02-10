@@ -21,12 +21,12 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 
 ## 📌 Proyecto
 
-- CRUD de usuarios
-- Autenticacion y verificacion la identidad de los usuarios
-- Implemetacion del Registro de usuarios
-- Implemetacion del Login de usuarios
-- Hashing y verificacion de contraseñas
-- Encriptacion y desencriptacion con JWT
+- [ ] CRUD de usuarios
+- [ ] Autenticacion y verificacion la identidad de los usuarios
+- [ ] Implemetacion del Registro de usuarios
+- [ ] Implemetacion del Login de usuarios
+- [ ] Hashing y verificacion de contraseñas
+- [ ] Encriptacion y desencriptacion con JWT
 
 ## 📚 Documentacion
 
