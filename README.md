@@ -13,11 +13,11 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 
 ## 📦 Herramietas
 
-- **Migrate** v4.14.1
+- **Migrate CLI** v4.14.1
   - Manejar migraciones de base de datos ya que los ORM son muy lentos para una fintech, por lo que es preferible usar SQL puro
-- **sqlc** v1.25.0
+- **sqlc CLI** v1.25.0
   - SQL compiler
-  - **Input**: Se escribe la consulta en SQL ---> **Blackbox**: [sqlc] ---> **Output**: Funciones en Golang con interfaces para poder utilizarlas y hacer consultas
+  - **Input**: Se escribe la consulta en SQL --> **Blackbox**: [sqlc] --> **Output**: Funciones en Golang con interfaces para poder utilizarlas y hacer consultas
 
 ## 📌 Proyecto
 
