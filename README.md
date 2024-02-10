@@ -1,6 +1,6 @@
 # 🏦 Ualapp Fintech
 
-Pryecto de prueba de concepto de una fintech basada en Next.js y Go
+Proyecto basico para simular el funcionamiento de una fintech basada en Next.js y Go
 
 ## 🔨 Tecnologias
 
