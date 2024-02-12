@@ -3,7 +3,6 @@ package util
 import (
 	"math"
 	"math/rand"
-	"strings"
 
 	"github.com/brianvoe/gofakeit/v6"
 )
@@ -48,13 +47,12 @@ const alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 // RandomString generates a random string of length n
 func RandomString(n int) string {
-	var sb strings.Builder
+	bits := []rune{}
 	k := len(alphabet)
 
 	for i := 0; i < n; i++ {
-		c := alphabet[rand.Intn(k)]
-		sb.WriteByte(c)
+		index := rand.Intn(k)
+		bits = append(bits, rune(alphabet[index]))
 	}
-
-	return sb.String()
+	return string(bits)
 }
