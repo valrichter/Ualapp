@@ -19,14 +19,19 @@ func TestCreateUser(t *testing.T) {
 		HashedPassword: hashedPassword,
 	}
 
-	user, err := testQuery.CreateUser(context.Background(), arg)
+	user1, err := testQuery.CreateUser(context.Background(), arg)
 
 	require.NoError(t, err)
-	require.NotEmpty(t, user)
+	require.NotEmpty(t, user1)
 
-	require.Equal(t, arg.Email, user.Email)
-	require.Equal(t, arg.HashedPassword, user.HashedPassword)
-	require.NotZero(t, user.CreatedAt)
-	require.WithinDuration(t, user.CreatedAt.Time, time.Now(), 2*time.Second)
-	require.WithinDuration(t, user.UpdatedAt.Time, time.Now(), 2*time.Second)
+	require.Equal(t, arg.Email, user1.Email)
+	require.Equal(t, arg.HashedPassword, user1.HashedPassword)
+	require.NotZero(t, user1.CreatedAt)
+	require.WithinDuration(t, user1.CreatedAt.Time, time.Now(), 2*time.Second)
+	require.WithinDuration(t, user1.UpdatedAt.Time, time.Now(), 2*time.Second)
+
+	user2, err := testQuery.CreateUser(context.Background(), arg)
+	require.Error(t, err)
+	require.Empty(t, user2)
 }
+
