@@ -40,3 +40,5 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 - Automatizacion de comandos con Makefile para ejecutar el contenedor de postgres, crear la base de datos e insertar las tablas
 
 ---
+
+- db_test: test para crear usarios en la tabla `Users`
