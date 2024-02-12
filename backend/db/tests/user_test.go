@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/require"
 	db "github.com/valrichter/Ualapp/db/sqlc"
 	"github.com/valrichter/Ualapp/util"
@@ -59,6 +60,10 @@ func TestUpdateUser(t *testing.T) {
 	arg := db.UpdateUserPasswordParams{
 		HashedPassword: newHashedPassword,
 		ID:             user.ID,
+		UpdatedAt: pgtype.Timestamptz{
+			Time:  time.Now(),
+			Valid: true,
+		},
 	}
 
 	updatedUser, err := testQuery.UpdateUserPassword(context.Background(), arg)

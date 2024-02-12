@@ -15,9 +15,10 @@ SELECT * FROM users ORDER BY id LIMIT $1 OFFSET $2;
 -- name: UpdateUserPassword :one
 UPDATE users
 SET
-    hashed_password = $1
+    hashed_password = $1,
+    updated_at = $2
 WHERE
-    id = $2 RETURNING *;
+    id = $3 RETURNING *;
 
 -- name: DeleteUser :exec
 DELETE FROM users WHERE id = $1;
