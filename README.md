@@ -42,3 +42,4 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 ---
 
 - db_test: test para crear usarios en la tabla `Users`
+- Agregado de random generators en `utils/random.go`
