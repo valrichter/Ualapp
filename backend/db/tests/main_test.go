@@ -14,7 +14,7 @@ var testQuery *db.Queries
 
 // TestMain sets up the database connection everytime the tests are run
 func TestMain(m *testing.M) {
-	var dbURL string = "postgresql://root:secret@localhost:5432/ualapp?sslmode=disable"
+	const dbURL string = "postgresql://root:secret@localhost:5432/ualapp?sslmode=disable"
 
 	conn, err := pgx.Connect(context.Background(), dbURL)
 	if err != nil {
