@@ -11,9 +11,12 @@ import (
 )
 
 func TestCreateUser(t *testing.T) {
+	passwordLength := util.RandomInt(6, 20)
+	hashedPassword := util.RandomPassword(passwordLength)
+
 	arg := db.CreateUserParams{
 		Email:          util.RandomEmail(),
-		HashedPassword: "secret",
+		HashedPassword: hashedPassword,
 	}
 
 	user, err := testQuery.CreateUser(context.Background(), arg)
