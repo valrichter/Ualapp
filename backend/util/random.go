@@ -26,9 +26,9 @@ func RandomEmail() string {
 	return email
 }
 
-// RandomInt generates a random integer between min and max
-func RandomInt(min, max int64) int64 {
-	n := min + rand.Int63n(max-min+1)
+// RandomInt generates a random positive integer between min and max
+func RandomInt(min, max int) int {
+	n := rand.Intn(max-min+1) + min
 	return n
 }
 
