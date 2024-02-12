@@ -73,4 +73,5 @@ func TestUpdateUser(t *testing.T) {
 	require.Equal(t, arg.HashedPassword, updatedUser.HashedPassword)
 	require.Equal(t, user.Email, updatedUser.Email)
 	require.Equal(t, arg.ID, updatedUser.ID)
+	require.WithinDuration(t, user.UpdatedAt.Time, time.Now(), 2*time.Second)
 }
