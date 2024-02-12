@@ -8,7 +8,7 @@ import (
 )
 
 func TestPassword(t *testing.T) {
-	passwordLength := int(RandomInt(5, 10))
+	passwordLength := RandomInt(6, 20)
 
 	password := RandomPassword(passwordLength)
 	hashedPassword1, err := HashPassword(password)
