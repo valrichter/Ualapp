@@ -7,11 +7,12 @@ import (
 
 	"github.com/stretchr/testify/require"
 	db "github.com/valrichter/Ualapp/db/sqlc"
+	utils "github.com/valrichter/Ualapp/util"
 )
 
 func TestCreateUser(t *testing.T) {
 	arg := db.CreateUserParams{
-		Email:          "test@example.com",
+		Email:          utils.RandomEmail(),
 		HashedPassword: "secret",
 	}
 
