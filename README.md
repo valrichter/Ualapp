@@ -41,5 +41,17 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 
 ---
 
-- db_test: test para crear usarios en la tabla `Users`
 - Agregado de random generators en `utils/random.go`
+- Agregado de hashing de contraseñas en `utils/password.go` con la libreria bcrypt y testeo de la misma
+
+## 🧪 Tests
+
+### Base de datos `ualapp`
+
+- [x] Creacion de usarios en la tabla `Users`
+- [x] Actualizacion de la contraseña de un usuario en la tabla `Users`
+
+### Util
+  
+- [x] Password hashing & verification
+- [ ] Random generator
