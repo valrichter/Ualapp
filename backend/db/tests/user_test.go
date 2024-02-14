@@ -12,6 +12,7 @@ import (
 	"github.com/valrichter/Ualapp/util"
 )
 
+// clean_db deletes all users from database
 func clean_db() {
 	err := testQuery.DeleteAllUsers(context.Background())
 	if err != nil {
@@ -47,6 +48,8 @@ func createRandomUser(t *testing.T) db.User {
 
 // TestCreateUser tests the CreateUser function of database
 func TestCreateUser(t *testing.T) {
+	defer clean_db()
+
 	user1 := createRandomUser(t)
 	arg := db.CreateUserParams{
 		Email:          user1.Email,
@@ -60,6 +63,8 @@ func TestCreateUser(t *testing.T) {
 
 // TestUpdateUser tests the UpdateUserPassword function of database
 func TestUpdateUserPassword(t *testing.T) {
+	defer clean_db()
+
 	user := createRandomUser(t)
 	newPassword := util.RandomPassword(util.RandomInt(6, 20))
 	newHashedPassword, err := util.HashPassword(newPassword)
@@ -86,6 +91,8 @@ func TestUpdateUserPassword(t *testing.T) {
 
 // TestGetUserbyID tests the GetUserById function of database
 func TestGetUserbyID(t *testing.T) {
+	defer clean_db()
+
 	user := createRandomUser(t)
 
 	newUser, err := testQuery.GetUserById(context.Background(), user.ID)
@@ -101,6 +108,8 @@ func TestGetUserbyID(t *testing.T) {
 
 // TestGetUserByEmail tests the GetUserByEmail function of database
 func TestGetUserByEmail(t *testing.T) {
+	defer clean_db()
+
 	user := createRandomUser(t)
 
 	newUser, err := testQuery.GetUserByEmail(context.Background(), user.Email)
@@ -114,6 +123,8 @@ func TestGetUserByEmail(t *testing.T) {
 
 // TestDeleteUser tests the DeleteUser function of database
 func TestDeleteUser(t *testing.T) {
+	defer clean_db()
+
 	user := createRandomUser(t)
 
 	err := testQuery.DeleteUser(context.Background(), user.ID)
@@ -126,6 +137,8 @@ func TestDeleteUser(t *testing.T) {
 
 // TestListUser tests the ListUsers function
 func TestListUser(t *testing.T) {
+	defer clean_db()
+
 	go func() {
 		for i := 0; i < 30; i++ {
 			createRandomUser(t)
