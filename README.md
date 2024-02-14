@@ -48,8 +48,7 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 
 ### Base de datos `ualapp`
 
-- [x] Creacion de usarios en la tabla `Users`
-- [x] Actualizacion de la contraseña de un usuario en la tabla `Users`
+- [x] Tests para todas las queries de la tabla `users`
 
 ### Util
   
