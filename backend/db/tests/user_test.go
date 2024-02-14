@@ -23,9 +23,9 @@ func createRandomUser(t *testing.T) db.User {
 	}
 
 	user, err := testQuery.CreateUser(context.Background(), arg)
-
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
+	
 	require.Equal(t, arg.Email, user.Email)
 	require.Equal(t, arg.HashedPassword, user.HashedPassword)
 	require.NotZero(t, user.CreatedAt)
@@ -37,9 +37,7 @@ func createRandomUser(t *testing.T) db.User {
 
 // TestCreateUser tests the CreateUser function of database
 func TestCreateUser(t *testing.T) {
-
 	user1 := createRandomUser(t)
-
 	arg := db.CreateUserParams{
 		Email:          user1.Email,
 		HashedPassword: user1.HashedPassword,
@@ -67,9 +65,9 @@ func TestUpdateUserPassword(t *testing.T) {
 	}
 
 	updatedUser, err := testQuery.UpdateUserPassword(context.Background(), arg)
-
 	require.NoError(t, err)
 	require.NotEmpty(t, updatedUser)
+
 	require.Equal(t, arg.HashedPassword, updatedUser.HashedPassword)
 	require.Equal(t, user.Email, updatedUser.Email)
 	require.Equal(t, arg.ID, updatedUser.ID)
@@ -81,13 +79,12 @@ func TestGetUserbyID(t *testing.T) {
 	user := createRandomUser(t)
 
 	newUser, err := testQuery.GetUserById(context.Background(), user.ID)
-
 	require.NoError(t, err)
 	require.NotEmpty(t, newUser)
+
 	require.Equal(t, user.Email, newUser.Email)
 	require.Equal(t, user.HashedPassword, newUser.HashedPassword)
 	require.WithinDuration(t, user.UpdatedAt.Time, time.Now(), 2*time.Second)
-
 	require.WithinDuration(t, user.CreatedAt.Time, newUser.CreatedAt.Time, time.Second)
 
 }
@@ -97,7 +94,6 @@ func TestGetUserByEmail(t *testing.T) {
 	user := createRandomUser(t)
 
 	newUser, err := testQuery.GetUserByEmail(context.Background(), user.Email)
-
 	require.NoError(t, err)
 	require.NotEmpty(t, newUser)
 
@@ -111,11 +107,9 @@ func TestDeleteUser(t *testing.T) {
 	user := createRandomUser(t)
 
 	err := testQuery.DeleteUser(context.Background(), user.ID)
-
 	require.NoError(t, err)
 
 	newUser, err := testQuery.GetUserById(context.Background(), user.ID)
-
 	require.Error(t, err)
 	require.Empty(t, newUser)
 }
@@ -132,7 +126,6 @@ func TestListUser(t *testing.T) {
 	}
 
 	users, err := testQuery.ListUsers(context.Background(), arg)
-
 	require.NoError(t, err)
 	require.NotEmpty(t, users)
 	require.Equal(t, 30, len(users))
