@@ -25,7 +25,7 @@ func createRandomUser(t *testing.T) db.User {
 	user, err := testQuery.CreateUser(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
-	
+
 	require.Equal(t, arg.Email, user.Email)
 	require.Equal(t, arg.HashedPassword, user.HashedPassword)
 	require.NotZero(t, user.CreatedAt)
@@ -121,8 +121,8 @@ func TestListUser(t *testing.T) {
 	}
 
 	arg := db.ListUsersParams{
-		Limit:  0,
-		Offset: 30,
+		Limit:  30,
+		Offset: 0,
 	}
 
 	users, err := testQuery.ListUsers(context.Background(), arg)
