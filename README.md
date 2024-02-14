@@ -30,7 +30,7 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 
 ## 📚 Documentacion
 
-- [Data Base Design (DER)](https://dbdocs.io/valrichter/go-ualapp)
+- [Diagrama Entidad-Relacion (DER)](https://dbdocs.io/valrichter/go-ualapp)
 
 ## 🚀 Desarrollo
 
@@ -44,11 +44,18 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 - Agregado de random generators en `utils/random.go`
 - Agregado de hashing de contraseñas en `utils/password.go` con la libreria bcrypt y testeo de la misma
 
+---
+
+- Testeadas todas la queries creadas con `sqlc` para la tablas `users`
+- Impletancion de `Store` para conectarse a postgres
+- implemetacion del pool de conexiones para la base de datos
+
 ## 🧪 Tests
 
 ### Base de datos `ualapp`
 
 - [x] Tests para todas las queries de la tabla `users`
+- [x] Uso de go rutines para el `TestListUsers`
 
 ### Util
   
