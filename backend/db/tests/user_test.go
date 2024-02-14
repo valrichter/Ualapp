@@ -86,6 +86,24 @@ func TestGetUserbyID(t *testing.T) {
 	require.NotEmpty(t, newUser)
 	require.Equal(t, user.Email, newUser.Email)
 	require.Equal(t, user.HashedPassword, newUser.HashedPassword)
+	require.WithinDuration(t, user.UpdatedAt.Time, time.Now(), 2*time.Second)
+
+	require.WithinDuration(t, user.CreatedAt.Time, newUser.CreatedAt.Time, time.Second)
+
+}
+
+func TestGetUserByEmail(t *testing.T) {
+	user := createRandomUser(t)
+
+	newUser, err := testQuery.GetUserByEmail(context.Background(), user.Email)
+
+	require.NoError(t, err)
+	require.NotEmpty(t, newUser)
+
+	require.Equal(t, user.Email, newUser.Email)
+	require.Equal(t, user.HashedPassword, newUser.HashedPassword)
+	require.WithinDuration(t, user.CreatedAt.Time, newUser.CreatedAt.Time, time.Second)
+
 }
 
 // TestListUser tests the ListUsers function
