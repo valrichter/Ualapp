@@ -137,7 +137,7 @@ func TestListUser(t *testing.T) {
 	defer clean_db()
 
 	var wg sync.WaitGroup
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 30; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
