@@ -35,7 +35,7 @@ func createRandomUser(t *testing.T) db.User {
 	return user
 }
 
-// TestCreateUser tests the CreateUser function
+// TestCreateUser tests the CreateUser function on database
 func TestCreateUser(t *testing.T) {
 
 	user1 := createRandomUser(t)
@@ -50,8 +50,8 @@ func TestCreateUser(t *testing.T) {
 	require.Empty(t, user2)
 }
 
-// TestUpdateUser
-func TestUpdateUser(t *testing.T) {
+// TestUpdateUser tests the UpdateUserPassword function on database
+func TestUpdateUserPassword(t *testing.T) {
 	user := createRandomUser(t)
 	newPassword := util.RandomPassword(util.RandomInt(6, 20))
 	newHashedPassword, err := util.HashPassword(newPassword)
@@ -74,4 +74,23 @@ func TestUpdateUser(t *testing.T) {
 	require.Equal(t, user.Email, updatedUser.Email)
 	require.Equal(t, arg.ID, updatedUser.ID)
 	require.WithinDuration(t, user.UpdatedAt.Time, time.Now(), 2*time.Second)
+}
+
+// TestListUser tests the ListUsers function
+func TestListUser(t *testing.T) {
+	for i := 0; i < 30; i++ {
+		createRandomUser(t)
+	}
+
+	arg := db.ListUsersParams{
+		Limit:  0,
+		Offset: 30,
+	}
+
+	users, err := testQuery.ListUsers(context.Background(), arg)
+
+	require.NoError(t, err)
+	require.NotEmpty(t, users)
+	require.Equal(t, 30, len(users))
+
 }
