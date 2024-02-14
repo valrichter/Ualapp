@@ -2,6 +2,7 @@ package db_test
 
 import (
 	"context"
+	"log"
 	"testing"
 	"time"
 
@@ -11,11 +12,20 @@ import (
 	"github.com/valrichter/Ualapp/util"
 )
 
+func clean_db() {
+	err := testQuery.DeleteAllUsers(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 // createRandomUser creates a random user of database for tests
 func createRandomUser(t *testing.T) db.User {
 	password := util.RandomPassword(util.RandomInt(6, 20))
 	hashedPassword, err := util.HashPassword(password)
-	require.NoError(t, err)
+	if err != nil {
+		log.Fatal("Cannot generate hashed password", err)
+	}
 
 	arg := db.CreateUserParams{
 		Email:          util.RandomEmail(),
@@ -116,9 +126,11 @@ func TestDeleteUser(t *testing.T) {
 
 // TestListUser tests the ListUsers function
 func TestListUser(t *testing.T) {
-	for i := 0; i < 30; i++ {
-		createRandomUser(t)
-	}
+	go func() {
+		for i := 0; i < 30; i++ {
+			createRandomUser(t)
+		}
+	}()
 
 	arg := db.ListUsersParams{
 		Limit:  30,
