@@ -11,7 +11,7 @@ import (
 	"github.com/valrichter/Ualapp/util"
 )
 
-// createRandomUser creates a random user for tests
+// createRandomUser creates a random user on database for tests
 func createRandomUser(t *testing.T) db.User {
 	password := util.RandomPassword(util.RandomInt(6, 20))
 	hashedPassword, err := util.HashPassword(password)
@@ -74,6 +74,18 @@ func TestUpdateUserPassword(t *testing.T) {
 	require.Equal(t, user.Email, updatedUser.Email)
 	require.Equal(t, arg.ID, updatedUser.ID)
 	require.WithinDuration(t, user.UpdatedAt.Time, time.Now(), 2*time.Second)
+}
+
+// TestGetUserbyID tests the GetUserById function on database
+func TestGetUserbyID(t *testing.T) {
+	user := createRandomUser(t)
+
+	newUser, err := testQuery.GetUserById(context.Background(), user.ID)
+
+	require.NoError(t, err)
+	require.NotEmpty(t, newUser)
+	require.Equal(t, user.Email, newUser.Email)
+	require.Equal(t, user.HashedPassword, newUser.HashedPassword)
 }
 
 // TestListUser tests the ListUsers function
