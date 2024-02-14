@@ -11,7 +11,7 @@ import (
 	"github.com/valrichter/Ualapp/util"
 )
 
-// createRandomUser creates a random user on database for tests
+// createRandomUser creates a random user of database for tests
 func createRandomUser(t *testing.T) db.User {
 	password := util.RandomPassword(util.RandomInt(6, 20))
 	hashedPassword, err := util.HashPassword(password)
@@ -35,7 +35,7 @@ func createRandomUser(t *testing.T) db.User {
 	return user
 }
 
-// TestCreateUser tests the CreateUser function on database
+// TestCreateUser tests the CreateUser function of database
 func TestCreateUser(t *testing.T) {
 
 	user1 := createRandomUser(t)
@@ -50,7 +50,7 @@ func TestCreateUser(t *testing.T) {
 	require.Empty(t, user2)
 }
 
-// TestUpdateUser tests the UpdateUserPassword function on database
+// TestUpdateUser tests the UpdateUserPassword function of database
 func TestUpdateUserPassword(t *testing.T) {
 	user := createRandomUser(t)
 	newPassword := util.RandomPassword(util.RandomInt(6, 20))
@@ -76,7 +76,7 @@ func TestUpdateUserPassword(t *testing.T) {
 	require.WithinDuration(t, user.UpdatedAt.Time, time.Now(), 2*time.Second)
 }
 
-// TestGetUserbyID tests the GetUserById function on database
+// TestGetUserbyID tests the GetUserById function of database
 func TestGetUserbyID(t *testing.T) {
 	user := createRandomUser(t)
 
@@ -92,6 +92,7 @@ func TestGetUserbyID(t *testing.T) {
 
 }
 
+// TestGetUserByEmail tests the GetUserByEmail function of database
 func TestGetUserByEmail(t *testing.T) {
 	user := createRandomUser(t)
 
@@ -103,7 +104,20 @@ func TestGetUserByEmail(t *testing.T) {
 	require.Equal(t, user.Email, newUser.Email)
 	require.Equal(t, user.HashedPassword, newUser.HashedPassword)
 	require.WithinDuration(t, user.CreatedAt.Time, newUser.CreatedAt.Time, time.Second)
+}
 
+// TestDeleteUser tests the DeleteUser function of database
+func TestDeleteUser(t *testing.T) {
+	user := createRandomUser(t)
+
+	err := testQuery.DeleteUser(context.Background(), user.ID)
+
+	require.NoError(t, err)
+
+	newUser, err := testQuery.GetUserById(context.Background(), user.ID)
+
+	require.Error(t, err)
+	require.Empty(t, newUser)
 }
 
 // TestListUser tests the ListUsers function
