@@ -15,7 +15,7 @@ type PostgreSQLStore struct {
 }
 
 // Creates a new Store
-func NewStore(connPool *pgxpool.Pool) Store {
+func NewPostgreSQLStore(connPool *pgxpool.Pool) Store {
 	return &PostgreSQLStore{
 		connPool: connPool,
 		Queries:  New(connPool),
