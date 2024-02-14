@@ -48,7 +48,7 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 
 - Testeadas todas la queries creadas con `sqlc` para la tablas `users`
 - Impletancion de `Store` para conectarse a postgres
-- implemetacion del pool de conexiones para la base de datos
+- Implemetacion del pool de conexiones para la base de datos `pgxpool.Pool` (Singleton)
 
 ## 🧪 Tests
 
