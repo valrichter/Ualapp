@@ -7,8 +7,7 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
+	"time"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -132,9 +131,9 @@ WHERE
 `
 
 type UpdateUserPasswordParams struct {
-	HashedPassword string             `json:"hashed_password"`
-	UpdatedAt      pgtype.Timestamptz `json:"updated_at"`
-	ID             int64              `json:"id"`
+	HashedPassword string    `json:"hashed_password"`
+	UpdatedAt      time.Time `json:"updated_at"`
+	ID             int64     `json:"id"`
 }
 
 func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (User, error) {

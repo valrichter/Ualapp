@@ -3,10 +3,10 @@ package db_test
 import (
 	"context"
 	"log"
+	"sync"
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/require"
 	db "github.com/valrichter/Ualapp/db/sqlc"
 	"github.com/valrichter/Ualapp/util"
@@ -40,8 +40,8 @@ func createRandomUser(t *testing.T) db.User {
 	require.Equal(t, arg.Email, user.Email)
 	require.Equal(t, arg.HashedPassword, user.HashedPassword)
 	require.NotZero(t, user.CreatedAt)
-	require.WithinDuration(t, user.CreatedAt.Time, time.Now(), 2*time.Second)
-	require.WithinDuration(t, user.UpdatedAt.Time, time.Now(), 2*time.Second)
+	require.WithinDuration(t, user.CreatedAt, time.Now(), 2*time.Second)
+	require.WithinDuration(t, user.UpdatedAt, time.Now(), 2*time.Second)
 
 	return user
 }
@@ -73,10 +73,7 @@ func TestUpdateUserPassword(t *testing.T) {
 	arg := db.UpdateUserPasswordParams{
 		HashedPassword: newHashedPassword,
 		ID:             user.ID,
-		UpdatedAt: pgtype.Timestamptz{
-			Time:  time.Now(),
-			Valid: true,
-		},
+		UpdatedAt:      time.Now(),
 	}
 
 	updatedUser, err := testQuery.UpdateUserPassword(context.Background(), arg)
@@ -86,7 +83,7 @@ func TestUpdateUserPassword(t *testing.T) {
 	require.Equal(t, arg.HashedPassword, updatedUser.HashedPassword)
 	require.Equal(t, user.Email, updatedUser.Email)
 	require.Equal(t, arg.ID, updatedUser.ID)
-	require.WithinDuration(t, user.UpdatedAt.Time, time.Now(), 2*time.Second)
+	require.WithinDuration(t, user.UpdatedAt, time.Now(), 2*time.Second)
 }
 
 // TestGetUserbyID tests the GetUserById function of database
@@ -101,8 +98,8 @@ func TestGetUserbyID(t *testing.T) {
 
 	require.Equal(t, user.Email, newUser.Email)
 	require.Equal(t, user.HashedPassword, newUser.HashedPassword)
-	require.WithinDuration(t, user.UpdatedAt.Time, time.Now(), 2*time.Second)
-	require.WithinDuration(t, user.CreatedAt.Time, newUser.CreatedAt.Time, time.Second)
+	require.WithinDuration(t, user.UpdatedAt, time.Now(), 2*time.Second)
+	require.WithinDuration(t, user.CreatedAt, newUser.CreatedAt, time.Second)
 
 }
 
@@ -118,7 +115,7 @@ func TestGetUserByEmail(t *testing.T) {
 
 	require.Equal(t, user.Email, newUser.Email)
 	require.Equal(t, user.HashedPassword, newUser.HashedPassword)
-	require.WithinDuration(t, user.CreatedAt.Time, newUser.CreatedAt.Time, time.Second)
+	require.WithinDuration(t, user.CreatedAt, newUser.CreatedAt, time.Second)
 }
 
 // TestDeleteUser tests the DeleteUser function of database
@@ -139,11 +136,15 @@ func TestDeleteUser(t *testing.T) {
 func TestListUser(t *testing.T) {
 	defer clean_db()
 
-	go func() {
-		for i := 0; i < 30; i++ {
+	var wg sync.WaitGroup
+	for i := 0; i < 5; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
 			createRandomUser(t)
-		}
-	}()
+		}()
+	}
+	wg.Wait()
 
 	arg := db.ListUsersParams{
 		Limit:  30,
