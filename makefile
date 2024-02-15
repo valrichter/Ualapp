@@ -1,6 +1,6 @@
-app:
-	# Run app
-	go run cmd/main.go
+server:
+	# Run HTTP server for Ualapp
+	cd backend && go run cmd/main.go
 
 create_migration:
 	# Create a new migration
