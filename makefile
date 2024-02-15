@@ -1,3 +1,7 @@
+app:
+	# Run app
+	go run cmd/main.go
+
 create_migration:
 	# Create a new migration
 	migrate create -ext sql -dir backend/db/migrations -seq $(name)
