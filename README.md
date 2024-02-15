@@ -50,6 +50,11 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 - Impletancion de `Store` para conectarse a postgres
 - Implemetacion del pool de conexiones para la base de datos `pgxpool.Pool` (Singleton)
 
+---
+
+- Confuguracion del server para la API
+- Configuracion del archivo `app.env`
+
 ## 🧪 Tests
 
 ### Base de datos `ualapp`
