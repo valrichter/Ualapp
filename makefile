@@ -35,3 +35,7 @@ migrate_down:
 sqlc:
 	# Run sqlc
 	cd backend && sqlc generate
+
+test:
+	# Run tests
+	 cd backend && go test -v -cover ./...
