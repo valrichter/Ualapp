@@ -5,5 +5,6 @@ import (
 )
 
 func main() {
-	api.NewGinServer(8080)
+	server := api.NewGinServer(".")
+	server.Start(8080)
 }
