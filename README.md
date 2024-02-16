@@ -55,6 +55,13 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 - Confuguracion del server para la API
 - Configuracion del archivo `app.env`
 
+---
+
+- API server recfator
+- Se agrego el endopint `/list_users` para listar todos los usuarios
+- - Se agrego el endopint `/create_user` para listar todos los usuarios
+- Se agrego bases de datos dedicada para testeo
+
 ## 🧪 Tests
 
 ### Base de datos `ualapp`

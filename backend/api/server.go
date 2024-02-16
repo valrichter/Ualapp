@@ -37,6 +37,7 @@ func (server *Server) setupRouter() {
 		ctx.JSON(http.StatusOK, gin.H{"message": "Welcome to Ualapp!"})
 	})
 
+	router.POST("/create_user", server.createUser)
 	router.GET("/list_users", server.listUsers)
 
 	server.router = router
