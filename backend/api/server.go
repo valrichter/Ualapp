@@ -1,14 +1,10 @@
 package api
 
 import (
-	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5/pgxpool"
 	db "github.com/valrichter/Ualapp/db/sqlc"
-	"github.com/valrichter/Ualapp/util"
 )
 
 // Server serves HTTP requests for our banking service
@@ -21,28 +17,30 @@ type Server struct {
 }
 
 // NewServer creates a new HTTP server and setup routing
-func NewGinServer(envPath string) *Server {
-	config, err := util.LoadConfig(envPath)
-	if err != nil {
-		panic(fmt.Sprintf("Cannot load config: %s", err))
+// NewServer creates a new HTTP server and setup routing
+func NewHTTPServer(store db.Store) (*Server, error) {
+	server := &Server{
+		store: store,
 	}
 
-	connPoll, err := pgxpool.New(context.Background(), config.DBSource)
-	if err != nil {
-		panic(fmt.Sprintf("Cannot connect to database: %s", err))
-	}
+	// create routes
+	server.setupRouter()
 
-	store := db.NewPostgreSQLStore(connPoll)
+	return server, nil
+}
 
-	g := gin.Default()
+// setupRouter sets up the routing for the HTTP server
+func (server *Server) setupRouter() {
+	router := gin.Default()
 
-	return &Server{store: store, router: g}
+	router.GET("/", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{"message": "Welcome to Ualapp!"})
+	})
+
+	server.router = router
 }
 
 // Start runs the HTTP server on a specific address
-func (server *Server) Start(port int) {
-	server.router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "Welcome to Ualapp"})
-	})
-	server.router.Run(fmt.Sprintf(":%d", port))
+func (server *Server) Start(address string) error {
+	return server.router.Run(address)
 }
