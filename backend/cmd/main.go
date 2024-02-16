@@ -16,12 +16,12 @@ func main() {
 		log.Fatal("cannot load config:")
 	}
 
-	connPool, err := pgxpool.New(context.Background(), config.DBSource)
+	dbConnPool, err := pgxpool.New(context.Background(), config.DBSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:")
 	}
 
-	store := db.NewPostgreSQLStore(connPool)
+	store := db.NewPostgreSQLStore(dbConnPool)
 
 	server, err := api.NewHTTPServer(store)
 	if err != nil {
