@@ -24,6 +24,7 @@ type userResponse struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// newUserResponse creates a new userResponse
 func newUserResponse(user db.User) userResponse {
 	return userResponse{
 		ID:        user.ID,
@@ -33,6 +34,7 @@ func newUserResponse(user db.User) userResponse {
 	}
 }
 
+// createUser creates a new user on database
 func (server *Server) createUser(ctx *gin.Context) {
 	var req userRequest
 
@@ -85,5 +87,11 @@ func (server *Server) listUsers(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, users)
+	// return list of user
+	allUsers := []userResponse{}
+	for _, user := range users {
+		allUsers = append(allUsers, newUserResponse(user))
+	}
+
+	ctx.JSON(http.StatusOK, allUsers)
 }
