@@ -4,8 +4,8 @@ import "github.com/spf13/viper"
 
 // Congif configures application level variables
 type Config struct {
-	DBDriver string `mapstructure:"DB_DRIVER"`
-	DBSource string `mapstructure:"DB_SOURCE"`
+	DBSource     string `mapstructure:"DB_SOURCE"`
+	DBSourceTest string `mapstructure:"DB_SOURCE_TEST"`
 }
 
 // LoadConfig reads configuration from file or environment variables and returns a capy of Config struct
