@@ -10,6 +10,8 @@ import (
 	"github.com/valrichter/Ualapp/util"
 )
 
+//TODO: add tests for users
+
 // userRequeststruct to create a new user
 type userRequest struct {
 	Email    string `json:"email" binding:"required,email"`

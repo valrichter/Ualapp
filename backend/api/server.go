@@ -37,15 +37,19 @@ func (server *Server) setupRouter() {
 		ctx.JSON(http.StatusOK, gin.H{"message": "Welcome to Ualapp!"})
 	})
 
+	// One way to handle routes
+	// * Users
 	router.POST("/create_user", server.createUser)
 	router.GET("/list_users", server.listUsers)
-
 	server.router = router
+
+	// Another way to handle routes
+	Auth{}.router(server)
+
 }
 
 // Start runs the HTTP server on a specific address
 func (server *Server) Start(address string) error {
-
 	return server.router.Run(address)
 }
 
