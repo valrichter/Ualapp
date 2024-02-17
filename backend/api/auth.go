@@ -11,6 +11,8 @@ import (
 	"github.com/valrichter/Ualapp/util"
 )
 
+//TODO: add tests for auth
+
 // Auth struct to handle authentication
 type Auth struct {
 	server     *Server
@@ -80,9 +82,9 @@ func (auth Auth) login(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"access_token":     accessToken,
-		"user_email":       accessPayload.Username,
-		"expires_at":       accessPayload.ExpiredAt,
+		"access_token": accessToken,
+		"user_email":   accessPayload.Username,
+		"expires_at":   accessPayload.ExpiredAt,
 	})
 
 }

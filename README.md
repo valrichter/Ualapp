@@ -65,6 +65,7 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 ---
 
 - Se agrego el endpoint `auth/login` para autenticar un usuario
+- Se agrego token de autenticacion para el endpoint `auth/login`
 - Manejo de errores de la base de datos de usuarios no existentes y de contraseñas incorrectas
 
 ## 🧪 Tests
