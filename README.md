@@ -62,6 +62,11 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 - - Se agrego el endopint `/create_user` para listar todos los usuarios
 - Se agrego bases de datos dedicada para testeo
 
+---
+
+- Se agrego el endpoint `auth/login` para autenticar un usuario
+- Manejo de errores de la base de datos de usuarios no existentes y de contraseñas incorrectas
+
 ## 🧪 Tests
 
 ### Base de datos `ualapp`
