@@ -39,8 +39,9 @@ func (server *Server) setupRouter() {
 
 	// One way to handle routes
 	// * Users
-	router.POST("/create_user", server.createUser)
+	// router.POST("/create_user", server.createUser)
 	router.GET("/list_users", server.listUsers)
+	router.GET("/users/me", server.getLoggedInUser)
 	server.router = router
 
 	// Another way to handle routes
