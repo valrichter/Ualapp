@@ -20,6 +20,8 @@ type Server struct {
 	token  token.Maker
 }
 
+
+
 // NewServer creates a new HTTP server and setup routing
 // NewServer creates a new HTTP server and setup routing
 func NewHTTPServer(store db.Store) (*Server, error) {

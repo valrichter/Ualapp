@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx"
 	db "github.com/valrichter/Ualapp/db/sqlc"
+	"github.com/valrichter/Ualapp/token"
 )
 
 //TODO: add tests for users
@@ -43,15 +44,15 @@ func (server *Server) listUsers(ctx *gin.Context) {
 
 // getLoggedInUser gets the logged user
 func (server *Server) getLoggedInUser(ctx *gin.Context) {
-	userId, exists := ctx.Get("user_id")
-	if !exists {
+	payload := ctx.MustGet(authorizationPayloadKey)
+	if payload == nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"error": "unauthorized to access resource",
 		})
 		return
 	}
 
-	user, err := server.store.GetUserById(ctx, userId.(int64))
+	user, err := server.store.GetUserByEmail(ctx, payload.(*token.Payload).Username)
 	if err != nil {
 		if err == pgx.ErrNoRows {
 			ctx.JSON(http.StatusUnauthorized, gin.H{

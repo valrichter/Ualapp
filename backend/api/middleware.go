@@ -15,7 +15,7 @@ import (
 const (
 	authorizationHeaderKey  = "authorization"
 	authorizationTypeBearer = "bearer"
-	authorizationPayloadKey = "authorization_payload"
+	authorizationPayloadKey = "user_id"
 )
 
 // AuthMiddleware creates a gin middleware for authorization
