@@ -16,28 +16,22 @@ import (
 
 // Auth struct to handle authentication
 type Auth struct {
-	server     *Server
-	tokenMaker token.Maker
+	server *Server
 }
 
 // Routing for authentication
 func (auth Auth) router(server *Server) {
-	config, err := util.LoadConfig(".")
-	if err != nil {
-		log.Default().Fatal("cannot load config:", err)
-		return
-	}
 
 	auth.server = server
 
-	key := config.TokenSimmetricKey
+	key := server.config.TokenSimmetricKey
 	tokenMaker, err := token.NewPasetoMaker(key)
 	if err != nil {
 		log.Default().Fatal("cannot create token maker", err)
 		return
 	}
 
-	auth.tokenMaker = tokenMaker
+	auth.server.token = tokenMaker
 
 	serverGroup := server.router.Group("/auth")
 	serverGroup.POST("/login", auth.login)
@@ -73,10 +67,7 @@ func (auth Auth) login(ctx *gin.Context) {
 		return
 	}
 
-	accessToken, accessPayload, err := auth.tokenMaker.CreateToken(
-		dbUser.Email,
-		time.Minute*15,
-	)
+	accessToken, accessPayload, err := auth.server.token.CreateToken(dbUser.Email, time.Minute*15)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))

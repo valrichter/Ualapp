@@ -5,6 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	db "github.com/valrichter/Ualapp/db/sqlc"
+	"github.com/valrichter/Ualapp/token"
+	"github.com/valrichter/Ualapp/util"
 )
 
 // Server serves HTTP requests for our banking service
@@ -14,13 +16,28 @@ import (
 type Server struct {
 	store  db.Store
 	router *gin.Engine
+	config util.Config
+	token  token.Maker
 }
 
 // NewServer creates a new HTTP server and setup routing
 // NewServer creates a new HTTP server and setup routing
 func NewHTTPServer(store db.Store) (*Server, error) {
+
+	config, err := util.LoadConfig(".")
+	if err != nil {
+		return nil, err
+	}
+
+	token, err := token.NewPasetoMaker(config.TokenSimmetricKey)
+	if err != nil {
+		return nil, err
+	}
+
 	server := &Server{
-		store: store,
+		store:  store,
+		token:  token,
+		config: config,
 	}
 
 	// create routes
@@ -39,10 +56,11 @@ func (server *Server) setupRouter() {
 
 	// One way to handle routes
 	// * Users
-	// router.POST("/create_user", server.createUser)
-	router.GET("/list_users", server.listUsers)
-	router.GET("/users/me", server.getLoggedInUser)
 	server.router = router
+	serverGroup := server.router.Group("/users", AuthMiddleware(server.token))
+	serverGroup.GET("", server.listUsers)
+	serverGroup.GET("me", server.getLoggedInUser)
+	serverGroup.PATCH("username")
 
 	// Another way to handle routes
 	Auth{}.router(server)
