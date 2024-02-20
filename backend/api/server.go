@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	db "github.com/valrichter/Ualapp/db/sqlc"
 	"github.com/valrichter/Ualapp/token"
@@ -19,8 +20,6 @@ type Server struct {
 	config util.Config
 	token  token.Maker
 }
-
-
 
 // NewServer creates a new HTTP server and setup routing
 // NewServer creates a new HTTP server and setup routing
@@ -51,6 +50,8 @@ func NewHTTPServer(store db.Store) (*Server, error) {
 // setupRouter sets up the routing for the HTTP server
 func (server *Server) setupRouter() {
 	router := gin.Default()
+
+	router.Use(cors.Default())
 
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"message": "Welcome to Ualapp!"})

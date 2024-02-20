@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx"
+	"github.com/jackc/pgx/v5/pgconn"
 	db "github.com/valrichter/Ualapp/db/sqlc"
 	"github.com/valrichter/Ualapp/token"
 	"github.com/valrichter/Ualapp/util"
@@ -120,7 +121,7 @@ func (auth Auth) register(ctx *gin.Context) {
 
 	user, err := auth.server.store.CreateUser(ctx, arg)
 	if err != nil {
-		if pgErr, ok := err.(*pgx.PgError); ok {
+		if pgErr, ok := err.(*pgconn.PgError); ok {
 
 			// check if user with that email already exists (23505 is for unique_violation)
 			if pgErr.Code == "23505" {
