@@ -14,7 +14,7 @@ import (
 
 // userResponse struct to create a response for a new user
 type userResponse struct {
-	ID        int64     `json:"id"`
+	ID        int32     `json:"id"`
 	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`

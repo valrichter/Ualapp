@@ -47,7 +47,7 @@ const deleteUser = `-- name: DeleteUser :exec
 DELETE FROM users WHERE id = $1
 `
 
-func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
+func (q *Queries) DeleteUser(ctx context.Context, id int32) error {
 	_, err := q.db.Exec(ctx, deleteUser, id)
 	return err
 }
@@ -73,7 +73,7 @@ const getUserById = `-- name: GetUserById :one
 SELECT id, email, hashed_password, created_at, updated_at FROM users WHERE id = $1
 `
 
-func (q *Queries) GetUserById(ctx context.Context, id int64) (User, error) {
+func (q *Queries) GetUserById(ctx context.Context, id int32) (User, error) {
 	row := q.db.QueryRow(ctx, getUserById, id)
 	var i User
 	err := row.Scan(
@@ -133,7 +133,7 @@ WHERE
 type UpdateUserPasswordParams struct {
 	HashedPassword string    `json:"hashed_password"`
 	UpdatedAt      time.Time `json:"updated_at"`
-	ID             int64     `json:"id"`
+	ID             int32     `json:"id"`
 }
 
 func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (User, error) {

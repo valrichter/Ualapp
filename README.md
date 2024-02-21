@@ -70,6 +70,10 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 - Manejo de errores de la base de datos de usuarios no existentes y de contraseñas incorrectas
 - Se agrego auth middleware para autenticar el token
 
+---
+
+- Agregado de tablas `accounts`, `entries` y `transfers`
+
 ## 🧪 Tests
 
 ### Base de datos `ualapp`
