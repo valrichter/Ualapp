@@ -1,10 +1,10 @@
 server:
 	# Run HTTP server for Ualapp
-	cd backend && go run cmd/main.go
+	go run cmd/main.go
 
 create_migration:
 	# Create a new migration
-	migrate create -ext sql -dir backend/db/migrations -seq $(name)
+	migrate create -ext sql -dir db/migrations -seq $(name)
 
 postgres_up:
 	# Start Postgres service
@@ -29,17 +29,17 @@ DB_SOURCE=postgresql://root:secret@localhost:5432/ualapp?sslmode=disable
 DB_SOURCE_TEST=postgresql://root:secret@localhost:5433/ualapp?sslmode=disable
 migrate_up:
 	# Migrate up
-	migrate -path backend/db/migrations -database "$(DB_SOURCE)" -verbose up
-	migrate -path backend/db/migrations -database "$(DB_SOURCE_TEST)" -verbose up
+	migrate -path db/migrations -database "$(DB_SOURCE)" -verbose up
+	migrate -path db/migrations -database "$(DB_SOURCE_TEST)" -verbose up
 
 migrate_down:
 	# Migrate down
-	migrate -path backend/db/migrations -database "$(DB_URL)" -verbose down
+	migrate -path db/migrations -database "$(DB_URL)" -verbose down
 
 sqlc:
 	# Run sqlc
-	cd backend && sqlc generate
+	sqlc generate
 
 test:
 	# Run tests
-	 cd backend && go test -v -cover ./...
+	 go test -v -cover ./...
