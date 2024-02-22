@@ -6,24 +6,22 @@ package db
 
 import (
 	"time"
-
-	"github.com/shopspring/decimal"
 )
 
 type Account struct {
-	ID        int32           `json:"id"`
-	UserID    int32           `json:"user_id"`
-	Balance   decimal.Decimal `json:"balance"`
-	Currency  string          `json:"currency"`
-	CreatedAt time.Time       `json:"created_at"`
+	ID        int32     `json:"id"`
+	UserID    int32     `json:"user_id"`
+	Balance   int64     `json:"balance"`
+	Currency  string    `json:"currency"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type Entry struct {
 	ID        int32 `json:"id"`
 	AccountID int32 `json:"account_id"`
 	// can be negative or positive
-	Amount    decimal.Decimal `json:"amount"`
-	CreatedAt time.Time       `json:"created_at"`
+	Amount    int64     `json:"amount"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type Transfer struct {
@@ -31,7 +29,7 @@ type Transfer struct {
 	FromAccountID int32 `json:"from_account_id"`
 	ToAccountID   int32 `json:"to_account_id"`
 	// must be positive
-	Amount    float32   `json:"amount"`
+	Amount    int64     `json:"amount"`
 	CreatedAt time.Time `json:"created_at"`
 }
 

@@ -7,7 +7,7 @@ CREATE TABLE "entries" (
 );
 
 CREATE TABLE "transfers" (
-    "id" serial PRIMARY KEY, "from_account_id" integer NOT NULL, "to_account_id" integer NOT NULL, "amount" real NOT NULL, "created_at" timestamptz NOT NULL DEFAULT(now())
+    "id" serial PRIMARY KEY, "from_account_id" integer NOT NULL, "to_account_id" integer NOT NULL, "amount" money NOT NULL, "created_at" timestamptz NOT NULL DEFAULT(now())
 );
 
 CREATE INDEX ON "accounts" ("user_id");
