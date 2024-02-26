@@ -23,7 +23,7 @@ func (account Account) router(server *Server) {
 }
 
 type AccountRequest struct {
-	Currency string `json:"currency" binding:"required"`
+	Currency string `json:"currency" binding:"required,currency"`
 }
 
 func (account Account) createAccount(ctx *gin.Context) {

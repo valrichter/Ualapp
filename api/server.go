@@ -5,6 +5,8 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 	db "github.com/valrichter/Ualapp/db/sqlc"
 	"github.com/valrichter/Ualapp/token"
 	"github.com/valrichter/Ualapp/util"
@@ -52,6 +54,9 @@ func NewHTTPServer(store db.Store) (*Server, error) {
 // setupRouter sets up the routing for the HTTP server
 func (server *Server) setupRouter() {
 	router := gin.Default()
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("currency", validCurrency)
+	}
 
 	router.Use(cors.Default())
 
