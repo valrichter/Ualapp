@@ -42,6 +42,7 @@ func (server *Server) listUsers(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, allUsers)
 }
 
+// TODO: Refactor getLoggedInUser (middleware auth)
 // getLoggedInUser gets the logged user
 func (server *Server) getLoggedInUser(ctx *gin.Context) {
 	payload := ctx.MustGet(authorizationPayloadKey)

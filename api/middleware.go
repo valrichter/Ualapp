@@ -11,6 +11,7 @@ import (
 )
 
 // TODO: add tests for middleware
+// TODO: Refactor middleware
 
 const (
 	authorizationHeaderKey  = "authorization"
