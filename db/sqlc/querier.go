@@ -9,12 +9,30 @@ import (
 )
 
 type Querier interface {
+	CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error)
+	CreateEntry(ctx context.Context, arg CreateEntryParams) (Entry, error)
+	CreateTransfer(ctx context.Context, arg CreateTransferParams) (Transfer, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	DeleteAccount(ctx context.Context, id int32) error
+	DeleteAllAccounts(ctx context.Context) error
+	DeleteAllEntries(ctx context.Context) error
+	DeleteAllTransfers(ctx context.Context) error
 	DeleteAllUsers(ctx context.Context) error
 	DeleteUser(ctx context.Context, id int32) error
+	GetAccountById(ctx context.Context, id int32) (Account, error)
+	GetAccountByUserId(ctx context.Context, userID int32) ([]Account, error)
+	GetEntryById(ctx context.Context, id int32) (Entry, error)
+	GetEntryByUserId(ctx context.Context, accountID int32) ([]Entry, error)
+	GetTransferById(ctx context.Context, id int32) (Transfer, error)
+	GetTransferFromAccountId(ctx context.Context, fromAccountID int32) ([]Transfer, error)
+	GetTransferToAccountId(ctx context.Context, toAccountID int32) ([]Transfer, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	GetUserById(ctx context.Context, id int32) (User, error)
+	ListAccounts(ctx context.Context, arg ListAccountsParams) ([]Account, error)
+	ListEntries(ctx context.Context, arg ListEntriesParams) ([]Entry, error)
+	ListTransfers(ctx context.Context, arg ListTransfersParams) ([]Transfer, error)
 	ListUsers(ctx context.Context, arg ListUsersParams) ([]User, error)
+	UpdateAccountsBalance(ctx context.Context, arg UpdateAccountsBalanceParams) (Account, error)
 	UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (User, error)
 }
 

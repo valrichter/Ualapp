@@ -29,3 +29,9 @@ func TestMain(m *testing.M) {
 	defer connPoll.Close()
 	os.Exit(m.Run())
 }
+
+// TODO: add tests for account.sql.go
+
+// TODO: add tests for transfer.sql.go
+
+// TODO: add tests for entries.sql.go
