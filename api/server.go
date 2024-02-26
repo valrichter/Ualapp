@@ -10,6 +10,8 @@ import (
 	"github.com/valrichter/Ualapp/util"
 )
 
+// TODO: add tests for server
+
 // Server serves HTTP requests for our banking service
 // Contains a store to access the database
 // Contains a gin engine to serve HTTP requests

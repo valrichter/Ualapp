@@ -7,6 +7,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// TODO: move this archive to a test package
+
 func TestPassword(t *testing.T) {
 	passwordLength := RandomInt(6, 20)
 

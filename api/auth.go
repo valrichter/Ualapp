@@ -13,7 +13,8 @@ import (
 	"github.com/valrichter/Ualapp/util"
 )
 
-//TODO: add tests for auth
+// TODO: add tests for auth
+// TODO: Refactor auth
 
 // Auth struct to handle authentication
 type Auth struct {
