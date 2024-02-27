@@ -82,11 +82,19 @@ func (account *Account) createAccount(ctx *gin.Context) {
 }
 
 func (account *Account) getUserAccounts(ctx *gin.Context) {
-	payload := ctx.MustGet(authorizationPayloadKey)
-	if payload == nil {
+	userId, err := account.server.GetActiveUser(ctx)
+	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"error": "unauthorized to access resource",
 		})
 		return
 	}
+
+	accounts, err := account.server.store.GetAccountByUserId(context.Background(), userId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, accounts)
 }

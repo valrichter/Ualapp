@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -69,4 +70,29 @@ func (server *Server) getLoggedInUser(ctx *gin.Context) {
 	// TODO: FIX THIS, DO NOT RETURN PASSWORD
 	ctx.JSON(http.StatusOK, user)
 
+}
+func (server *Server) GetActiveUser(ctx *gin.Context) (int32, error) {
+	// authorizationPayload = user_id
+	payload := ctx.MustGet("user_id")
+	if payload == nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error": "unauthorized to access resource",
+		})
+		return 0, fmt.Errorf("unauthorized to access resource")
+	}
+
+	user, err := server.store.GetUserByEmail(ctx, payload.(*token.Payload).Username)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"error": "unauthorized to access resource",
+			})
+			return 0, fmt.Errorf("unauthorized to access resource")
+		}
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return 0, err
+	}
+
+	return user.ID, nil
 }
