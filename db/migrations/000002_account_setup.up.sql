@@ -1,13 +1,13 @@
 CREATE TABLE "accounts" (
-    "id" serial PRIMARY KEY, "user_id" integer NOT NULL, "balance" money NOT NULL DEFAULT 0, "currency" varchar(3) NOT NULL, "created_at" timestamptz NOT NULL DEFAULT(now())
+    "id" serial PRIMARY KEY, "user_id" integer NOT NULL, "balance" bigint NOT NULL DEFAULT 0, "currency" varchar(3) NOT NULL, "created_at" timestamptz NOT NULL DEFAULT(now())
 );
 
 CREATE TABLE "entries" (
-    "id" serial PRIMARY KEY, "account_id" integer NOT NULL, "amount" money NOT NULL, "created_at" timestamptz NOT NULL DEFAULT(now())
+    "id" serial PRIMARY KEY, "account_id" integer NOT NULL, "amount" bigint NOT NULL, "created_at" timestamptz NOT NULL DEFAULT(now())
 );
 
 CREATE TABLE "transfers" (
-    "id" serial PRIMARY KEY, "from_account_id" integer NOT NULL, "to_account_id" integer NOT NULL, "amount" money NOT NULL, "created_at" timestamptz NOT NULL DEFAULT(now())
+    "id" serial PRIMARY KEY, "from_account_id" integer NOT NULL, "to_account_id" integer NOT NULL, "amount" bigint NOT NULL, "created_at" timestamptz NOT NULL DEFAULT(now())
 );
 
 CREATE INDEX ON "accounts" ("user_id");

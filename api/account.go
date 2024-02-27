@@ -18,18 +18,18 @@ type Account struct {
 
 // Routing for authentication
 func (account Account) router(server *Server) {
-
 	account.server = server
 
 	serverGroup := server.router.Group("/account", AuthMiddleware(server.token))
-	serverGroup.POST("/create-account", account.createAccount)
+	serverGroup.POST("/create", account.createAccount)
+	serverGroup.GET("/", account.getUserAccounts)
 }
 
 type AccountRequest struct {
 	Currency string `json:"currency" binding:"required,currency"`
 }
 
-func (account Account) createAccount(ctx *gin.Context) {
+func (account *Account) createAccount(ctx *gin.Context) {
 	payload := ctx.MustGet(authorizationPayloadKey)
 	if payload == nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{
@@ -79,4 +79,14 @@ func (account Account) createAccount(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusCreated, newAccount)
+}
+
+func (account *Account) getUserAccounts(ctx *gin.Context) {
+	payload := ctx.MustGet(authorizationPayloadKey)
+	if payload == nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error": "unauthorized to access resource",
+		})
+		return
+	}
 }
