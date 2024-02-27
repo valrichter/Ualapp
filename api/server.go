@@ -74,6 +74,7 @@ func (server *Server) setupRouter() {
 
 	// Another way to handle routes
 	Auth{}.router(server)
+	Account{}.router(server)
 
 }
 

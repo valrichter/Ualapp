@@ -1,10 +1,13 @@
 package api
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx"
+	"github.com/jackc/pgx/v5/pgconn"
+	db "github.com/valrichter/Ualapp/db/sqlc"
 	"github.com/valrichter/Ualapp/token"
 )
 
@@ -35,6 +38,7 @@ func (account Account) createAccount(ctx *gin.Context) {
 		return
 	}
 
+	// TODO: Refactor createAccount
 	user, err := account.server.store.GetUserByEmail(ctx, payload.(*token.Payload).Username)
 	if err != nil {
 		if err == pgx.ErrNoRows {
@@ -54,4 +58,25 @@ func (account Account) createAccount(ctx *gin.Context) {
 		return
 	}
 
+	arg := db.CreateAccountParams{
+		UserID:   user.ID,
+		Currency: acc.Currency,
+	}
+
+	newAccount, err := account.server.store.CreateAccount(context.Background(), arg)
+	if err != nil {
+		if pgErr, ok := err.(*pgconn.PgError); ok {
+
+			// check if user with that email already exists (23505 is for unique_violation)
+			if pgErr.Code == "23505" {
+				ctx.JSON(http.StatusBadRequest, gin.H{
+					"error": "you already have an account with that currency",
+				})
+				return
+			}
+		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+	}
+
+	ctx.JSON(http.StatusCreated, newAccount)
 }
