@@ -15,6 +15,13 @@ SELECT * FROM accounts ORDER BY id LIMIT $1 OFFSET $2;
 -- name: UpdateAccountsBalance :one
 UPDATE accounts SET balance = $1 WHERE id = $2 RETURNING *;
 
+-- name: UpdateAccountBalance :one
+UPDATE accounts
+SET
+    balance = balance + sqlc.arg (amount)
+WHERE
+    id = sqlc.arg (id) RETURNING *;
+
 -- name: DeleteAccount :exec
 DELETE FROM accounts WHERE id = $1;
 
