@@ -34,8 +34,8 @@ migrate_up:
 
 migrate_down:
 	# Migrate down
-	migrate -path db/migrations -database "$(DB_SOURCE)" -verbose down
-	migrate -path db/migrations -database "$(DB_SOURCE_TEST)" -verbose down
+	migrate -path db/migrations -database "$(DB_SOURCE)" -verbose down $(count)
+	migrate -path db/migrations -database "$(DB_SOURCE_TEST)" -verbose down $(count)
 
 sqlc:
 	# Run sqlc
