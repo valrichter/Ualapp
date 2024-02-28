@@ -21,12 +21,14 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 
 ## 📌 Proyecto
 
-- [ ] CRUD de usuarios
+- [x] CRUD de usuarios
 - [x] Autenticacion y verificacion la identidad de los usuarios
-- [ ] Implemetacion del Registro de usuarios
-- [ ] Implemetacion del Login de usuarios
+- [x] Implemetacion del Registro de usuarios
+- [x] Implemetacion del Login de usuarios
 - [x] Hashing y verificacion de contraseñas
 - [x] Encriptacion y desencriptacion con PASETO
+- [x] Implementacion de la creacion de cuenta en ARS
+- [ ] Implementacion de las transferencias
 
 ## 📚 Documentacion
 
@@ -75,6 +77,7 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 - Agregado de tablas `accounts`, `entries` y `transfers`
 - Creacion de los archivos sqlc para las nuevas tablas
 - Implementacion la api `accounts` para crear cuenta en ARS
+- Implementacion de trasacciones SQL para la query de transferir dinero entre cuentas
 
 ## 🧪 Tests
 
