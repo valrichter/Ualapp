@@ -1,7 +1,7 @@
 -- name: CreateAccount :one
 INSERT INTO
-    accounts (user_id, currency)
-VALUES ($1, $2) RETURNING *;
+    accounts (user_id, balance, currency)
+VALUES ($1, $2, $3) RETURNING *;
 
 -- name: GetAccountById :one
 SELECT * FROM accounts WHERE id = $1;

@@ -4,8 +4,7 @@ import (
 	"context"
 )
 
-// TODO: Implement transfer tests
-
+// TODO: Implement transfer test
 // Contains the input parameters for creating a new transfer
 type TransferTxRequest struct {
 	FromAccountID int32 `json:"from_account_id"`

@@ -60,6 +60,7 @@ func (account *Account) createAccount(ctx *gin.Context) {
 
 	arg := db.CreateAccountParams{
 		UserID:   user.ID,
+		Balance:  0,
 		Currency: acc.Currency,
 	}
 

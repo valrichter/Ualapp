@@ -1,7 +1,6 @@
 package util
 
 import (
-	"math"
 	"math/rand"
 
 	"github.com/brianvoe/gofakeit/v6"
@@ -14,10 +13,8 @@ func RandomFullName() string {
 }
 
 // Generates a random amount of money
-func RandomMoney() float32 {
-	rNum := gofakeit.Price(0, 1000)
-	money := float32(math.Floor(float64(rNum*100)) / 100)
-	return money
+func RandomMoney() int64 {
+	return int64(gofakeit.IntRange(0, 1000))
 }
 
 // Generates a random email

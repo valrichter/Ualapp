@@ -11,7 +11,7 @@ import (
 	"github.com/valrichter/Ualapp/util"
 )
 
-var testQuery db.Store
+var testStore db.Store
 
 // TestMain sets up the database connection everytime the tests are run
 func TestMain(m *testing.M) {
@@ -25,13 +25,11 @@ func TestMain(m *testing.M) {
 		log.Fatal("Cannot connect to database: ", err)
 	}
 
-	testQuery = db.NewPostgreSQLStore(connPoll)
+	testStore = db.NewPostgreSQLStore(connPoll)
 	defer connPoll.Close()
 	os.Exit(m.Run())
 }
 
 // TODO: add tests for account.sql.go
-
-// TODO: add tests for transfer.sql.go
 
 // TODO: add tests for entries.sql.go

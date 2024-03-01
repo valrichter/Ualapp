@@ -14,7 +14,7 @@ import (
 
 // cleanDB deletes all users from database
 func cleanDB() {
-	err := testQuery.DeleteAllUsers(context.Background())
+	err := testStore.DeleteAllUsers(context.Background())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -24,16 +24,14 @@ func cleanDB() {
 func createRandomUser(t *testing.T) db.User {
 	password := util.RandomPassword(util.RandomInt(6, 20))
 	hashedPassword, err := util.HashPassword(password)
-	if err != nil {
-		log.Fatal("Cannot generate hashed password", err)
-	}
+	require.NoError(t, err)
 
 	arg := db.CreateUserParams{
 		Email:          util.RandomEmail(),
 		HashedPassword: hashedPassword,
 	}
 
-	user, err := testQuery.CreateUser(context.Background(), arg)
+	user, err := testStore.CreateUser(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
 
@@ -56,7 +54,7 @@ func TestCreateUser(t *testing.T) {
 		HashedPassword: user1.HashedPassword,
 	}
 
-	user2, err := testQuery.CreateUser(context.Background(), arg)
+	user2, err := testStore.CreateUser(context.Background(), arg)
 	require.Error(t, err)
 	require.Empty(t, user2)
 }
@@ -76,7 +74,7 @@ func TestUpdateUserPassword(t *testing.T) {
 		UpdatedAt:      time.Now(),
 	}
 
-	updatedUser, err := testQuery.UpdateUserPassword(context.Background(), arg)
+	updatedUser, err := testStore.UpdateUserPassword(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, updatedUser)
 
@@ -92,7 +90,7 @@ func TestGetUserbyID(t *testing.T) {
 
 	user := createRandomUser(t)
 
-	newUser, err := testQuery.GetUserById(context.Background(), user.ID)
+	newUser, err := testStore.GetUserById(context.Background(), user.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, newUser)
 
@@ -109,7 +107,7 @@ func TestGetUserByEmail(t *testing.T) {
 
 	user := createRandomUser(t)
 
-	newUser, err := testQuery.GetUserByEmail(context.Background(), user.Email)
+	newUser, err := testStore.GetUserByEmail(context.Background(), user.Email)
 	require.NoError(t, err)
 	require.NotEmpty(t, newUser)
 
@@ -124,10 +122,10 @@ func TestDeleteUser(t *testing.T) {
 
 	user := createRandomUser(t)
 
-	err := testQuery.DeleteUser(context.Background(), user.ID)
+	err := testStore.DeleteUser(context.Background(), user.ID)
 	require.NoError(t, err)
 
-	newUser, err := testQuery.GetUserById(context.Background(), user.ID)
+	newUser, err := testStore.GetUserById(context.Background(), user.ID)
 	require.Error(t, err)
 	require.Empty(t, newUser)
 }
@@ -151,7 +149,7 @@ func TestListUser(t *testing.T) {
 		Offset: 0,
 	}
 
-	users, err := testQuery.ListUsers(context.Background(), arg)
+	users, err := testStore.ListUsers(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, users)
 	require.Equal(t, 30, len(users))
