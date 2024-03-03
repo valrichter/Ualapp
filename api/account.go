@@ -2,6 +2,8 @@ package api
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +25,7 @@ func (account Account) router(server *Server) {
 	serverGroup := server.router.Group("/account", AuthMiddleware(server.token))
 	serverGroup.POST("/create", account.createAccount)
 	serverGroup.GET("/", account.getUserAccounts)
+	serverGroup.POST("/transfer", account.createTransfer)
 }
 
 type AccountRequest struct {
@@ -83,7 +86,7 @@ func (account *Account) createAccount(ctx *gin.Context) {
 }
 
 func (account *Account) getUserAccounts(ctx *gin.Context) {
-	userId, err := account.server.GetActiveUser(ctx)
+	userId, err := account.server.GetActiveUserID(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"error": "unauthorized to access resource",
@@ -98,4 +101,70 @@ func (account *Account) getUserAccounts(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, accounts)
+}
+
+type transferRequest struct {
+	FromAccountID int32 `json:"from_account_id" binding:"required"`
+	ToAccountID   int32 `json:"to_account_id" binding:"required"`
+	Amount        int64 `json:"amount" binding:"required"`
+}
+
+func (account *Account) createTransfer(ctx *gin.Context) {
+	var req transferRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	fromAccount, valid := account.validAccount(ctx, req.FromAccountID)
+	if !valid {
+		return
+	}
+
+	toAccount, valid := account.validAccount(ctx, req.ToAccountID)
+	if !valid {
+		return
+	}
+
+	if fromAccount.Balance < req.Amount {
+		err := fmt.Errorf("balance is not enough, %d < %d", fromAccount.Balance, req.Amount)
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	if fromAccount.Currency != toAccount.Currency {
+		err := fmt.Errorf("from account currency mismatch, %s != %s", fromAccount.Currency, toAccount.Currency)
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	arg := db.TransferTxRequest{
+		FromAccountID: req.FromAccountID,
+		ToAccountID:   req.ToAccountID,
+		Amount:        req.Amount,
+	}
+
+	result, err := account.server.store.TransferTx(ctx, arg)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, result)
+}
+
+func (account *Account) validAccount(ctx *gin.Context, accountID int32) (db.Account, bool) {
+	acc, err := account.server.store.GetAccountById(ctx, accountID)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			// account doesn't exist
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return acc, false
+		}
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return acc, false
+	}
+
+	return acc, true
 }

@@ -71,7 +71,7 @@ func (server *Server) getLoggedInUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, user)
 
 }
-func (server *Server) GetActiveUser(ctx *gin.Context) (int32, error) {
+func (server *Server) GetActiveUserID(ctx *gin.Context) (int32, error) {
 	// authorizationPayload = user_id
 	payload := ctx.MustGet("user_id")
 	if payload == nil {
