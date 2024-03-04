@@ -91,8 +91,8 @@ type userRequest struct {
 }
 
 // newUserResponse creates a new userResponse
-func newUserResponse(user db.User) userResponse {
-	return userResponse{
+func newUserResponse(user db.User) UserResponse {
+	return UserResponse{
 		ID:        user.ID,
 		Email:     user.Email,
 		CreatedAt: user.CreatedAt,

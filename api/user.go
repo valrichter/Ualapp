@@ -17,15 +17,6 @@ type User struct {
 	server *Server
 }
 
-// userResponse struct to create a response for a new user
-type userResponse struct {
-	ID        int32     `json:"id"`
-	Email     string    `json:"email"`
-	Username  string    `json:"username"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
-
 func (u User) router(server *Server) {
 	u.server = server
 
@@ -48,7 +39,7 @@ func (u *User) listUsers(ctx *gin.Context) {
 	}
 
 	// return list of user
-	allUsers := []userResponse{}
+	allUsers := []UserResponse{}
 	for _, user := range users {
 		allUsers = append(allUsers, newUserResponse(user))
 	}
@@ -67,6 +58,7 @@ func (u *User) getLoggedInUser(ctx *gin.Context) {
 		return
 	}
 
+	// TODO: fix middleware auth, Username != Email
 	user, err := u.server.store.GetUserByEmail(ctx, payload.(*token.Payload).Username)
 	if err != nil {
 		if err == pgx.ErrNoRows {
@@ -80,11 +72,10 @@ func (u *User) getLoggedInUser(ctx *gin.Context) {
 		return
 	}
 
-	// TODO: FIX THIS, DO NOT RETURN PASSWORD
-	ctx.JSON(http.StatusOK, user)
+	ctx.JSON(http.StatusOK, UserResponse{}.toUserResponse(&user))
 
 }
-func (server *Server) GetActiveUserID(ctx *gin.Context) (int32, error) {
+func (s *Server) GetActiveUserID(ctx *gin.Context) (int32, error) {
 	// authorizationPayload = user_id
 	payload := ctx.MustGet("user_id")
 	if payload == nil {
@@ -94,7 +85,7 @@ func (server *Server) GetActiveUserID(ctx *gin.Context) (int32, error) {
 		return 0, fmt.Errorf("unauthorized to access resource")
 	}
 
-	user, err := server.store.GetUserByEmail(ctx, payload.(*token.Payload).Username)
+	user, err := s.store.GetUserByEmail(ctx, payload.(*token.Payload).Username)
 	if err != nil {
 		if err == pgx.ErrNoRows {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
@@ -110,3 +101,21 @@ func (server *Server) GetActiveUserID(ctx *gin.Context) (int32, error) {
 	return user.ID, nil
 }
 
+// userResponse struct to create a response for a new user
+type UserResponse struct {
+	ID        int32     `json:"id"`
+	Email     string    `json:"email"`
+	Username  string    `json:"username"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+func (u UserResponse) toUserResponse(user *db.User) *UserResponse {
+	return &UserResponse{
+		ID:        user.ID,
+		Email:     user.Email,
+		Username:  user.Username,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+	}
+}
