@@ -82,6 +82,8 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 ---
 
 - Implementacion de la api para transferencias de dinero entre cuentas
+- Agregado de la columna `username` a la tabla `users`
+- Implementacion de la api para actualizar el `username` de una cuenta
 
 ## 🧪 Tests
 
