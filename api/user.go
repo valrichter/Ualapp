@@ -23,6 +23,7 @@ func (u User) router(server *Server) {
 	serverGroup := server.router.Group("/users", AuthMiddleware(server.token))
 	serverGroup.GET("", u.listUsers)
 	serverGroup.GET("me", u.getLoggedInUser)
+	serverGroup.PATCH("me", u.updateUsername)
 }
 
 // listUsers lists all users of database
@@ -47,27 +48,16 @@ func (u *User) listUsers(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, allUsers)
 }
 
-// TODO: Refactor getLoggedInUser (middleware auth)
 // getLoggedInUser gets the logged user
 func (u *User) getLoggedInUser(ctx *gin.Context) {
-	payload := ctx.MustGet(authorizationPayloadKey)
-	if payload == nil {
-		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"error": "unauthorized to access resource",
-		})
+	userId, err := u.server.GetActiveUserID(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
-	// TODO: fix middleware auth, Username != Email
-	user, err := u.server.store.GetUserByEmail(ctx, payload.(*token.Payload).Username)
+	user, err := u.server.store.GetUserById(ctx, userId)
 	if err != nil {
-		if err == pgx.ErrNoRows {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "unauthorized to access resource",
-			})
-			return
-		}
-
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
@@ -75,7 +65,19 @@ func (u *User) getLoggedInUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, UserResponse{}.toUserResponse(&user))
 
 }
+
+func (u *User) updateUsername(ctx *gin.Context) {
+	payload := ctx.MustGet(authorizationPayloadKey)
+	if payload == nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error": "unauthorized to access resource",
+		})
+		return
+	}
+}
+
 func (s *Server) GetActiveUserID(ctx *gin.Context) (int32, error) {
+	// TODO: Refactor middleware authorization
 	// authorizationPayload = user_id
 	payload := ctx.MustGet("user_id")
 	if payload == nil {
