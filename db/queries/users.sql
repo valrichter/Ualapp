@@ -20,6 +20,14 @@ SET
 WHERE
     id = $3 RETURNING *;
 
+-- name: UpdateUsername :one
+UPDATE users
+SET
+    username = $1,
+    updated_at = $2
+WHERE
+    id = $3 RETURNING *;
+
 -- name: DeleteUser :exec
 DELETE FROM users WHERE id = $1;
 
