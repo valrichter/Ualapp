@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"time"
@@ -23,7 +24,7 @@ func (u User) router(server *Server) {
 	serverGroup := server.router.Group("/users", AuthMiddleware(server.token))
 	serverGroup.GET("", u.listUsers)
 	serverGroup.GET("me", u.getLoggedInUser)
-	serverGroup.PATCH("me", u.updateUsername)
+	serverGroup.PATCH("username", u.updateUsername)
 }
 
 // listUsers lists all users of database
@@ -66,14 +67,36 @@ func (u *User) getLoggedInUser(ctx *gin.Context) {
 
 }
 
+type UpdateUsernameType struct {
+	Username string `json:"username" binding:"required"`
+}
+
 func (u *User) updateUsername(ctx *gin.Context) {
-	payload := ctx.MustGet(authorizationPayloadKey)
-	if payload == nil {
-		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"error": "unauthorized to access resource",
-		})
+	userId, err := u.server.GetActiveUserID(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
+
+	var userInfo UpdateUsernameType
+	if err := ctx.ShouldBindJSON(&userInfo); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	arg := db.UpdateUsernameParams{
+		ID:        userId,
+		Username:  userInfo.Username,
+		UpdatedAt: time.Now(),
+	}
+
+	user, err := u.server.store.UpdateUsername(context.Background(), arg)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, UserResponse{}.toUserResponse(&user))
 }
 
 func (s *Server) GetActiveUserID(ctx *gin.Context) (int32, error) {
