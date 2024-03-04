@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx"
+	"github.com/jackc/pgx/v5/pgtype"
 	db "github.com/valrichter/Ualapp/db/sqlc"
 	"github.com/valrichter/Ualapp/token"
 )
@@ -85,8 +86,11 @@ func (u *User) updateUsername(ctx *gin.Context) {
 	}
 
 	arg := db.UpdateUsernameParams{
-		ID:        userId,
-		Username:  userInfo.Username,
+		ID: userId,
+		Username: pgtype.Text{
+			String: userInfo.Username,
+			Valid:  true,
+		},
 		UpdatedAt: time.Now(),
 	}
 
@@ -139,7 +143,19 @@ func (u UserResponse) toUserResponse(user *db.User) *UserResponse {
 	return &UserResponse{
 		ID:        user.ID,
 		Email:     user.Email,
-		Username:  user.Username,
+		Username:  user.Username.String,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+	}
+}
+
+// TODO: fix newUserResponse and toUserResponse
+// newUserResponse creates a new userResponse
+func newUserResponse(user db.User) UserResponse {
+	return UserResponse{
+		ID:        user.ID,
+		Email:     user.Email,
+		Username:  user.Email,
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
 	}

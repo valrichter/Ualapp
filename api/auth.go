@@ -40,9 +40,15 @@ func (auth Auth) router(server *Server) {
 	serverGroup.POST("/register", auth.register)
 }
 
+// userRequest struct to create a new user
+type UserRequest struct {
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required"`
+}
+
 // Login function for authentication
 func (auth Auth) login(ctx *gin.Context) {
-	user := new(userRequest)
+	user := new(UserRequest)
 	if err := ctx.ShouldBindJSON(user); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
@@ -84,25 +90,9 @@ func (auth Auth) login(ctx *gin.Context) {
 
 }
 
-// userRequeststruct to create a new user
-type userRequest struct {
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required"`
-}
-
-// newUserResponse creates a new userResponse
-func newUserResponse(user db.User) UserResponse {
-	return UserResponse{
-		ID:        user.ID,
-		Email:     user.Email,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
-	}
-}
-
 // createUser creates a new user on database
 func (auth Auth) register(ctx *gin.Context) {
-	var req userRequest
+	var req UserRequest
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))

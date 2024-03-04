@@ -6,6 +6,8 @@ package db
 
 import (
 	"time"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Account struct {
@@ -34,10 +36,10 @@ type Transfer struct {
 }
 
 type User struct {
-	ID             int32     `json:"id"`
-	Email          string    `json:"email"`
-	HashedPassword string    `json:"hashed_password"`
-	CreatedAt      time.Time `json:"created_at"`
-	UpdatedAt      time.Time `json:"updated_at"`
-	Username       string    `json:"username"`
+	ID             int32       `json:"id"`
+	Email          string      `json:"email"`
+	HashedPassword string      `json:"hashed_password"`
+	CreatedAt      time.Time   `json:"created_at"`
+	UpdatedAt      time.Time   `json:"updated_at"`
+	Username       pgtype.Text `json:"username"`
 }
