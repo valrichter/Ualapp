@@ -26,7 +26,6 @@ type Server struct {
 }
 
 // NewServer creates a new HTTP server and setup routing
-// NewServer creates a new HTTP server and setup routing
 func NewHTTPServer(store db.Store) (*Server, error) {
 
 	config, err := util.LoadConfig(".")
@@ -64,15 +63,10 @@ func (server *Server) setupRouter() {
 		ctx.JSON(http.StatusOK, gin.H{"message": "Welcome to Ualapp!"})
 	})
 
-	// One way to handle routes
-	// * Users
 	server.router = router
-	serverGroup := server.router.Group("/users", AuthMiddleware(server.token))
-	serverGroup.GET("", server.listUsers)
-	serverGroup.GET("me", server.getLoggedInUser)
-	serverGroup.PATCH("username")
 
-	// Another way to handle routes
+	// setup routes
+	User{}.router(server)
 	Auth{}.router(server)
 	Account{}.router(server)
 

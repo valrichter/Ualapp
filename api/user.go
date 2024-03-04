@@ -13,22 +13,35 @@ import (
 
 //TODO: add tests for users
 
+type User struct {
+	server *Server
+}
+
 // userResponse struct to create a response for a new user
 type userResponse struct {
 	ID        int32     `json:"id"`
 	Email     string    `json:"email"`
+	Username  string    `json:"username"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+func (u User) router(server *Server) {
+	u.server = server
+
+	serverGroup := server.router.Group("/users", AuthMiddleware(server.token))
+	serverGroup.GET("", u.listUsers)
+	serverGroup.GET("me", u.getLoggedInUser)
+}
+
 // listUsers lists all users of database
-func (server *Server) listUsers(ctx *gin.Context) {
+func (u *User) listUsers(ctx *gin.Context) {
 	arg := db.ListUsersParams{
 		Limit:  10,
 		Offset: 0,
 	}
 
-	users, err := server.store.ListUsers(ctx, arg)
+	users, err := u.server.store.ListUsers(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
@@ -45,7 +58,7 @@ func (server *Server) listUsers(ctx *gin.Context) {
 
 // TODO: Refactor getLoggedInUser (middleware auth)
 // getLoggedInUser gets the logged user
-func (server *Server) getLoggedInUser(ctx *gin.Context) {
+func (u *User) getLoggedInUser(ctx *gin.Context) {
 	payload := ctx.MustGet(authorizationPayloadKey)
 	if payload == nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{
@@ -54,7 +67,7 @@ func (server *Server) getLoggedInUser(ctx *gin.Context) {
 		return
 	}
 
-	user, err := server.store.GetUserByEmail(ctx, payload.(*token.Payload).Username)
+	user, err := u.server.store.GetUserByEmail(ctx, payload.(*token.Payload).Username)
 	if err != nil {
 		if err == pgx.ErrNoRows {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
@@ -96,3 +109,4 @@ func (server *Server) GetActiveUserID(ctx *gin.Context) (int32, error) {
 
 	return user.ID, nil
 }
+
