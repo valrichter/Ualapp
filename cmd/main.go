@@ -16,7 +16,7 @@ func main() {
 		log.Fatal("cannot load config:")
 	}
 
-	dbConnPool, err := pgxpool.New(context.Background(), config.DBSource)
+	dbConnPool, err := pgxpool.New(context.Background(), config.DBSource+config.DBName+"?sslmode=disable")
 	if err != nil {
 		log.Fatal("cannot connect to db:")
 	}

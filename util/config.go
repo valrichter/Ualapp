@@ -4,8 +4,9 @@ import "github.com/spf13/viper"
 
 // Congif configures application level variables
 type Config struct {
+	DBDriver          string `mapstructure:"DB_DRIVER"`
 	DBSource          string `mapstructure:"DB_SOURCE"`
-	DBSourceTest      string `mapstructure:"DB_SOURCE_TEST"`
+	DBName            string `mapstructure:"DB_NAME"`
 	TokenSimmetricKey string `mapstructure:"TOKEN_SYMMETRIC_KEY"`
 }
 
