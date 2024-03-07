@@ -43,12 +43,13 @@ func (auth Auth) router(server *Server) {
 // userRequest struct to create a new user
 type UserRequest struct {
 	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required"`
+	Password string `json:"password" binding:"required,min=6"`
 }
 
 // Login function for authentication
 func (auth Auth) login(ctx *gin.Context) {
 	user := new(UserRequest)
+
 	if err := ctx.ShouldBindJSON(user); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return

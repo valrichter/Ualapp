@@ -69,7 +69,7 @@ func (u *User) getLoggedInUser(ctx *gin.Context) {
 }
 
 type UpdateUsernameType struct {
-	Username string `json:"username" binding:"required"`
+	Username string `json:"username" binding:"required,alphanum"`
 }
 
 func (u *User) updateUsername(ctx *gin.Context) {
