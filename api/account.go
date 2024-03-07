@@ -26,6 +26,7 @@ func (account Account) router(server *Server) {
 	serverGroup.POST("/create", account.createAccount)
 	serverGroup.GET("/", account.getUserAccounts)
 	serverGroup.POST("/transfer", account.createTransfer)
+	serverGroup.POST("/add-balance", account.addMoney)
 }
 
 type AccountRequest struct {
@@ -167,4 +168,83 @@ func (account *Account) validAccount(ctx *gin.Context, accountID int32) (db.Acco
 	}
 
 	return acc, true
+}
+
+type AddMoneyRequest struct {
+	ToAccountID int32  `json:"to_account_id" binding:"required"`
+	Amount      int64  `json:"amount" binding:"required"`
+	Reference   string `json:"reference" binding:"required"`
+}
+
+func (account *Account) addMoney(ctx *gin.Context) {
+	userId, err := account.server.GetActiveUserID(ctx)
+	if err != nil {
+		return
+	}
+
+	obj := AddMoneyRequest{}
+	if err := ctx.ShouldBindJSON(&obj); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	acc, err := account.server.store.GetAccountById(ctx, obj.ToAccountID)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			// account doesn't exist
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"error": "Account not found",
+			})
+			return
+		} else {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+	}
+
+	if acc.UserID != userId {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error": "unauthorized to access resource",
+		})
+		return
+	}
+
+	argMoney := db.CreateMoneyRecordParams{
+		UserID:    userId,
+		Status:    "pending",
+		Amount:    obj.Amount,
+		Reference: obj.Reference,
+	}
+
+	_, err = account.server.store.CreateMoneyRecord(context.Background(), argMoney)
+	if err != nil {
+		if pgErr, ok := err.(*pgconn.PgError); ok {
+
+			// 23505 is for unique_violation
+			if pgErr.Code == "23505" {
+				ctx.JSON(http.StatusBadRequest, gin.H{
+					"error": "Record with that reference already exists",
+				})
+				return
+			}
+		} else {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+	}
+
+	// check money rerod to confirm trasaction status
+
+	argBalance := db.UpdateAccountBalanceParams{
+		ID:     obj.ToAccountID,
+		Amount: obj.Amount,
+	}
+
+	_, err = account.server.store.UpdateAccountBalance(context.Background(), argBalance)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Money added successfully"})
 }
