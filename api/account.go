@@ -22,7 +22,7 @@ type Account struct {
 func (account Account) router(server *Server) {
 	account.server = server
 
-	serverGroup := server.router.Group("/account", AuthMiddleware(server.tokenMaker))
+	serverGroup := server.router.Group("/account").Use(AuthMiddleware(server.tokenMaker))
 	serverGroup.POST("/create", account.createAccount)
 	serverGroup.GET("/", account.getUserAccounts)
 	serverGroup.POST("/transfer", account.createTransfer)
