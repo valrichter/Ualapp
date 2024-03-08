@@ -22,7 +22,7 @@ type User struct {
 func (u User) router(server *Server) {
 	u.server = server
 
-	serverGroup := server.router.Group("/users", AuthMiddleware(server.token))
+	serverGroup := server.router.Group("/users").Use(AuthMiddleware(server.tokenMaker))
 	serverGroup.GET("", u.listUsers)
 	serverGroup.GET("me", u.getLoggedInUser)
 	serverGroup.PATCH("username", u.updateUsername)

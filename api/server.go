@@ -22,7 +22,7 @@ type Server struct {
 	store  db.Store
 	router *gin.Engine
 	config util.Config
-	token  token.Maker
+	tokenMaker token.Maker
 }
 
 // NewServer creates a new HTTP server and setup routing
@@ -33,14 +33,14 @@ func NewHTTPServer(store db.Store) (*Server, error) {
 		return nil, err
 	}
 
-	token, err := token.NewPasetoMaker(config.TokenSimmetricKey)
+	tokenMaker, err := token.NewPasetoMaker(config.TokenSimmetricKey)
 	if err != nil {
 		return nil, err
 	}
 
 	server := &Server{
 		store:  store,
-		token:  token,
+		tokenMaker: tokenMaker,
 		config: config,
 	}
 

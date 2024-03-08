@@ -33,7 +33,7 @@ func (auth Auth) router(server *Server) {
 		return
 	}
 
-	auth.server.token = tokenMaker
+	auth.server.tokenMaker = tokenMaker
 
 	serverGroup := server.router.Group("/auth")
 	serverGroup.POST("/login", auth.login)
@@ -49,7 +49,6 @@ type UserRequest struct {
 // Login function for authentication
 func (auth Auth) login(ctx *gin.Context) {
 	user := new(UserRequest)
-
 	if err := ctx.ShouldBindJSON(user); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
@@ -76,7 +75,7 @@ func (auth Auth) login(ctx *gin.Context) {
 		return
 	}
 
-	accessToken, accessPayload, err := auth.server.token.CreateToken(dbUser.Email, time.Minute*15)
+	accessToken, accessPayload, err := auth.server.tokenMaker.CreateToken(dbUser.Email, time.Minute*15)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
