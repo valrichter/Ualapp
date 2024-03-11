@@ -3,6 +3,7 @@ package api
 import (
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -48,9 +49,13 @@ type UserRequest struct {
 
 // Login function for authentication
 func (auth Auth) login(ctx *gin.Context) {
-	user := new(UserRequest)
-	if err := ctx.ShouldBindJSON(user); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+	var user UserRequest
+
+	// TODO: Fix Handle errors
+	if err := ctx.ShouldBindJSON(&user); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": strings.Split(err.Error(), ":"),
+		})
 		return
 	}
 
