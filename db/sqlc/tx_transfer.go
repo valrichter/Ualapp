@@ -76,7 +76,7 @@ func UpdateMoney(
 	accountID2 int32,
 	amount2 int64,
 ) (account1 Account, account2 Account, err error) {
-	account1, err = q.UpdateAccountBalance(ctx, UpdateAccountBalanceParams{
+	account1, err = q.UpdateAccountBalanceNew(ctx, UpdateAccountBalanceNewParams{
 		ID:     accountID1,
 		Amount: amount1,
 	})
@@ -84,7 +84,7 @@ func UpdateMoney(
 		return
 	}
 
-	account2, err = q.UpdateAccountBalance(ctx, UpdateAccountBalanceParams{
+	account2, err = q.UpdateAccountBalanceNew(ctx, UpdateAccountBalanceNewParams{
 		ID:     accountID2,
 		Amount: amount2,
 	})

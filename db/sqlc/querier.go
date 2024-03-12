@@ -6,6 +6,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Querier interface {
@@ -21,6 +23,7 @@ type Querier interface {
 	DeleteAllUsers(ctx context.Context) error
 	DeleteMoneyRecordById(ctx context.Context, id int32) error
 	DeleteUser(ctx context.Context, id int32) error
+	GetAccountByAccountNumber(ctx context.Context, accountNumber pgtype.Text) (GetAccountByAccountNumberRow, error)
 	GetAccountById(ctx context.Context, id int32) (Account, error)
 	GetAccountByUserId(ctx context.Context, userID int32) ([]Account, error)
 	GetEntryById(ctx context.Context, id int32) (Entry, error)
@@ -36,7 +39,7 @@ type Querier interface {
 	ListEntries(ctx context.Context, arg ListEntriesParams) ([]Entry, error)
 	ListTransfers(ctx context.Context, arg ListTransfersParams) ([]Transfer, error)
 	ListUsers(ctx context.Context, arg ListUsersParams) ([]User, error)
-	UpdateAccountBalance(ctx context.Context, arg UpdateAccountBalanceParams) (Account, error)
+	UpdateAccountBalanceNew(ctx context.Context, arg UpdateAccountBalanceNewParams) (Account, error)
 	UpdateAccountNumber(ctx context.Context, arg UpdateAccountNumberParams) (Account, error)
 	UpdateAccountsBalance(ctx context.Context, arg UpdateAccountsBalanceParams) (Account, error)
 	UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (User, error)

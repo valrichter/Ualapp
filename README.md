@@ -66,6 +66,7 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 ---
 
 - Generacion de numero de cuentas
+- Endpoint `/get-account-by-number` para obtener una cuenta por su numero
 
 ## 🧪 Tests
 

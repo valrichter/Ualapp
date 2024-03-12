@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx"
@@ -20,6 +21,55 @@ type Account struct {
 	server *Server
 }
 
+type AccountResponse struct {
+	ID            int32     `json:"id"`
+	UserID        int32     `json:"user_id"`
+	Balance       int64     `json:"balance"`
+	Currency      string    `json:"currency"`
+	CreatedAt     time.Time `json:"created_at"`
+	AccountNumber string    `json:"account_number"`
+}
+
+func (u AccountResponse) ToAccountResponse(account *db.Account) *AccountResponse {
+	return &AccountResponse{
+		ID:            account.ID,
+		UserID:        account.UserID,
+		Balance:       account.Balance,
+		Currency:      account.Currency,
+		CreatedAt:     account.CreatedAt,
+		AccountNumber: account.AccountNumber.String,
+	}
+}
+
+func (u AccountResponse) ToAccountResponses(accounts []db.Account) []AccountResponse {
+	accountResponses := make([]AccountResponse, len(accounts))
+
+	for i := range accounts {
+		accountResponses[i] = *u.ToAccountResponse(&accounts[i])
+	}
+
+	return accountResponses
+}
+
+type AccountByNumResponse struct {
+	*AccountResponse
+	Email string `json:"email"`
+}
+
+func (u AccountByNumResponse) ToAccountByNumResponse(account *db.GetAccountByAccountNumberRow) *AccountByNumResponse {
+	return &AccountByNumResponse{
+		AccountResponse: &AccountResponse{
+			ID:            account.ID,
+			UserID:        account.UserID,
+			Balance:       account.Balance,
+			Currency:      account.Currency,
+			CreatedAt:     account.CreatedAt,
+			AccountNumber: account.AccountNumber.String,
+		},
+		Email: account.Email,
+	}
+}
+
 // Routing for authentication
 func (account Account) router(server *Server) {
 	account.server = server
@@ -29,6 +79,7 @@ func (account Account) router(server *Server) {
 	serverGroup.POST("/create", account.createAccount)
 	serverGroup.POST("/transfer", account.createTransfer)
 	serverGroup.POST("/add-money", account.addMoney)
+	serverGroup.POST("/get-account-by-number", account.getAccountByAccountNumber)
 }
 
 type AccountRequest struct {
@@ -112,7 +163,7 @@ func (account *Account) createAccount(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, newAccount)
+	ctx.JSON(http.StatusCreated, AccountResponse{}.ToAccountResponse(&newAccount))
 }
 
 func (account *Account) getUserAccounts(ctx *gin.Context) {
@@ -133,14 +184,14 @@ func (account *Account) getUserAccounts(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, accounts)
 }
 
-type transferRequest struct {
+type TransferRequest struct {
 	FromAccountID int32 `json:"from_account_id" binding:"required"`
 	ToAccountID   int32 `json:"to_account_id" binding:"required"`
 	Amount        int64 `json:"amount" binding:"required"`
 }
 
 func (account *Account) createTransfer(ctx *gin.Context) {
-	var req transferRequest
+	var req TransferRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
@@ -264,16 +315,40 @@ func (account *Account) addMoney(ctx *gin.Context) {
 
 	// check money rerod to confirm trasaction status
 
-	argBalance := db.UpdateAccountBalanceParams{
+	argBalance := db.UpdateAccountBalanceNewParams{
 		ID:     obj.ToAccountID,
 		Amount: obj.Amount,
 	}
 
-	_, err = account.server.store.UpdateAccountBalance(context.Background(), argBalance)
+	_, err = account.server.store.UpdateAccountBalanceNew(context.Background(), argBalance)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Money added successfully"})
+}
+
+type GetAccountByAccountNumberRequest struct {
+	AccountNumber string `json:"account_number" binding:"required"`
+}
+
+func (a *Account) getAccountByAccountNumber(ctx *gin.Context) {
+	var info GetAccountByAccountNumberRequest
+
+	if err := ctx.ShouldBindJSON(&info); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	acc, err := a.server.store.GetAccountByAccountNumber(ctx, pgtype.Text{
+		String: info.AccountNumber,
+		Valid:  true,
+	})
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, AccountByNumResponse{}.ToAccountByNumResponse(&acc))
 }
