@@ -9,8 +9,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/jackc/pgx/v5/pgtype"
 	db "github.com/valrichter/Ualapp/db/sqlc"
 	"github.com/valrichter/Ualapp/token"
+	"github.com/valrichter/Ualapp/util"
 )
 
 // Auth struct to handle authentication
@@ -81,6 +83,33 @@ func (account *Account) createAccount(ctx *gin.Context) {
 			}
 		}
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+	}
+
+	newAccountNumber, err := util.GenerateAccountNumber(newAccount.ID, newAccount.Currency)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+
+		err := account.server.store.DeleteAccount(context.Background(), newAccount.ID)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+		ctx.
+			JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	newAccount, err = account.server.store.UpdateAccountNumber(context.Background(),
+		db.UpdateAccountNumberParams{
+			AccountNumber: pgtype.Text{
+				String: newAccountNumber,
+				Valid:  true,
+			},
+			ID: newAccount.ID,
+		})
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
 	}
 
 	ctx.JSON(http.StatusCreated, newAccount)

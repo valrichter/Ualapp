@@ -1,7 +1,9 @@
 package util
 
 import (
+	"fmt"
 	"math/rand"
+	"time"
 
 	"github.com/brianvoe/gofakeit/v6"
 )
@@ -52,4 +54,21 @@ func RandomString(n int) string {
 		bits = append(bits, rune(alphabet[index]))
 	}
 	return string(bits)
+}
+
+func GenerateAccountNumber(accountID int32, currency string) (string, error) {
+	config, ok := Currencies[currency]
+	if !ok {
+		return "", fmt.Errorf("invalid currency: %s", currency)
+	}
+	activeTime := time.Now().Format("20060102150405")
+	initialValue := fmt.Sprintf("%s%d", config.Id, accountID)
+	// account number should be 10 in length
+	finalValue := ""
+	reminder := 10 - len(initialValue)
+	if reminder > 0 {
+		finalValue = activeTime[:reminder]
+	}
+	accountNumber := fmt.Sprintf("%s%s", initialValue, finalValue)
+	return accountNumber, nil
 }

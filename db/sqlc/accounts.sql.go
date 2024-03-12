@@ -7,6 +7,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createAccount = `-- name: CreateAccount :one
@@ -153,6 +155,29 @@ type UpdateAccountBalanceParams struct {
 
 func (q *Queries) UpdateAccountBalance(ctx context.Context, arg UpdateAccountBalanceParams) (Account, error) {
 	row := q.db.QueryRow(ctx, updateAccountBalance, arg.Amount, arg.ID)
+	var i Account
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Balance,
+		&i.Currency,
+		&i.CreatedAt,
+		&i.AccountNumber,
+	)
+	return i, err
+}
+
+const updateAccountNumber = `-- name: UpdateAccountNumber :one
+UPDATE accounts SET account_number = $1 WHERE id = $2 RETURNING id, user_id, balance, currency, created_at, account_number
+`
+
+type UpdateAccountNumberParams struct {
+	AccountNumber pgtype.Text `json:"account_number"`
+	ID            int32       `json:"id"`
+}
+
+func (q *Queries) UpdateAccountNumber(ctx context.Context, arg UpdateAccountNumberParams) (Account, error) {
+	row := q.db.QueryRow(ctx, updateAccountNumber, arg.AccountNumber, arg.ID)
 	var i Account
 	err := row.Scan(
 		&i.ID,

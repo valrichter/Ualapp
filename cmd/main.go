@@ -7,6 +7,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/valrichter/Ualapp/api"
 	db "github.com/valrichter/Ualapp/db/sqlc"
+	"github.com/valrichter/Ualapp/scripts"
 	"github.com/valrichter/Ualapp/util"
 )
 
@@ -28,4 +29,5 @@ func main() {
 		log.Fatal("Cannot start server:", err)
 	}
 	server.Start("localhost:8080")
+	scripts.AddAccountNumbers()
 }

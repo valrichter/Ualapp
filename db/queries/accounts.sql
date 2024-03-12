@@ -15,6 +15,9 @@ SELECT * FROM accounts ORDER BY id LIMIT $1 OFFSET $2;
 -- name: UpdateAccountsBalance :one
 UPDATE accounts SET balance = $1 WHERE id = $2 RETURNING *;
 
+-- name: UpdateAccountNumber :one
+UPDATE accounts SET account_number = $1 WHERE id = $2 RETURNING *;
+
 -- name: UpdateAccountBalance :one
 UPDATE accounts
 SET

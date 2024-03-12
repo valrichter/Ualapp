@@ -59,12 +59,13 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 - Creacion de los archivos sqlc para las nuevas tablas
 - Implementacion la api `accounts` para crear cuenta en ARS
 - Implementacion de trasacciones SQL para la query de transferir dinero entre cuentas
-
----
-
 - Implementacion de la api para transferencias de dinero entre cuentas
 - Agregado de la columna `username` a la tabla `users`
 - Implementacion de la api para actualizar el `username` de una cuenta
+
+---
+
+- Generacion de numero de cuentas
 
 ## 🧪 Tests
 
