@@ -11,11 +11,12 @@ import (
 )
 
 type Account struct {
-	ID        int32     `json:"id"`
-	UserID    int32     `json:"user_id"`
-	Balance   int64     `json:"balance"`
-	Currency  string    `json:"currency"`
-	CreatedAt time.Time `json:"created_at"`
+	ID            int32       `json:"id"`
+	UserID        int32       `json:"user_id"`
+	Balance       int64       `json:"balance"`
+	Currency      string      `json:"currency"`
+	CreatedAt     time.Time   `json:"created_at"`
+	AccountNumber pgtype.Text `json:"account_number"`
 }
 
 type Entry struct {
