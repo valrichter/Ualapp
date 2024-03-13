@@ -7,6 +7,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 const createMoneyRecord = `-- name: CreateMoneyRecord :one
@@ -18,10 +20,10 @@ VALUES ($1, $2, $3, $4) RETURNING id, user_id, reference, status, amount
 `
 
 type CreateMoneyRecordParams struct {
-	UserID    int32  `json:"user_id"`
-	Reference string `json:"reference"`
-	Status    string `json:"status"`
-	Amount    int64  `json:"amount"`
+	UserID    uuid.UUID `json:"user_id"`
+	Reference string    `json:"reference"`
+	Status    string    `json:"status"`
+	Amount    int64     `json:"amount"`
 }
 
 func (q *Queries) CreateMoneyRecord(ctx context.Context, arg CreateMoneyRecordParams) (MoneyRecord, error) {

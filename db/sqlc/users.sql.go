@@ -9,6 +9,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -50,7 +51,7 @@ const deleteUser = `-- name: DeleteUser :exec
 DELETE FROM users WHERE id = $1
 `
 
-func (q *Queries) DeleteUser(ctx context.Context, id int32) error {
+func (q *Queries) DeleteUser(ctx context.Context, id uuid.UUID) error {
 	_, err := q.db.Exec(ctx, deleteUser, id)
 	return err
 }
@@ -77,7 +78,7 @@ const getUserById = `-- name: GetUserById :one
 SELECT id, email, hashed_password, created_at, updated_at, username FROM users WHERE id = $1
 `
 
-func (q *Queries) GetUserById(ctx context.Context, id int32) (User, error) {
+func (q *Queries) GetUserById(ctx context.Context, id uuid.UUID) (User, error) {
 	row := q.db.QueryRow(ctx, getUserById, id)
 	var i User
 	err := row.Scan(
@@ -139,7 +140,7 @@ WHERE
 type UpdateUserPasswordParams struct {
 	HashedPassword string    `json:"hashed_password"`
 	UpdatedAt      time.Time `json:"updated_at"`
-	ID             int32     `json:"id"`
+	ID             uuid.UUID `json:"id"`
 }
 
 func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (User, error) {
@@ -168,7 +169,7 @@ WHERE
 type UpdateUsernameParams struct {
 	Username  pgtype.Text `json:"username"`
 	UpdatedAt time.Time   `json:"updated_at"`
-	ID        int32       `json:"id"`
+	ID        uuid.UUID   `json:"id"`
 }
 
 func (q *Queries) UpdateUsername(ctx context.Context, arg UpdateUsernameParams) (User, error) {

@@ -9,6 +9,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -19,9 +20,9 @@ VALUES ($1, $2, $3) RETURNING id, user_id, balance, currency, created_at, accoun
 `
 
 type CreateAccountParams struct {
-	UserID   int32  `json:"user_id"`
-	Balance  int64  `json:"balance"`
-	Currency string `json:"currency"`
+	UserID   uuid.UUID `json:"user_id"`
+	Balance  int64     `json:"balance"`
+	Currency string    `json:"currency"`
 }
 
 func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error) {
@@ -66,7 +67,7 @@ WHERE
 
 type GetAccountByAccountNumberRow struct {
 	ID            int32       `json:"id"`
-	UserID        int32       `json:"user_id"`
+	UserID        uuid.UUID   `json:"user_id"`
 	Balance       int64       `json:"balance"`
 	Currency      string      `json:"currency"`
 	CreatedAt     time.Time   `json:"created_at"`
@@ -111,7 +112,7 @@ const getAccountByUserId = `-- name: GetAccountByUserId :many
 SELECT id, user_id, balance, currency, created_at, account_number FROM accounts WHERE user_id = $1
 `
 
-func (q *Queries) GetAccountByUserId(ctx context.Context, userID int32) ([]Account, error) {
+func (q *Queries) GetAccountByUserId(ctx context.Context, userID uuid.UUID) ([]Account, error) {
 	rows, err := q.db.Query(ctx, getAccountByUserId, userID)
 	if err != nil {
 		return nil, err

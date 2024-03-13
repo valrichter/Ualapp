@@ -1,5 +1,5 @@
 CREATE TABLE "accounts" (
-    "id" serial PRIMARY KEY, "user_id" integer NOT NULL, "balance" bigint NOT NULL DEFAULT 0, "currency" varchar(3) NOT NULL, "created_at" timestamptz NOT NULL DEFAULT(now())
+    "id" serial PRIMARY KEY, "user_id" uuid NOT NULL, "balance" bigint NOT NULL DEFAULT 0, "currency" varchar(3) NOT NULL, "created_at" timestamptz NOT NULL DEFAULT(now())
 );
 
 CREATE TABLE "entries" (

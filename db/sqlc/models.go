@@ -7,12 +7,13 @@ package db
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Account struct {
 	ID            int32       `json:"id"`
-	UserID        int32       `json:"user_id"`
+	UserID        uuid.UUID   `json:"user_id"`
 	Balance       int64       `json:"balance"`
 	Currency      string      `json:"currency"`
 	CreatedAt     time.Time   `json:"created_at"`
@@ -28,11 +29,11 @@ type Entry struct {
 }
 
 type MoneyRecord struct {
-	ID        int32  `json:"id"`
-	UserID    int32  `json:"user_id"`
-	Reference string `json:"reference"`
-	Status    string `json:"status"`
-	Amount    int64  `json:"amount"`
+	ID        int32     `json:"id"`
+	UserID    uuid.UUID `json:"user_id"`
+	Reference string    `json:"reference"`
+	Status    string    `json:"status"`
+	Amount    int64     `json:"amount"`
 }
 
 type Transfer struct {
@@ -45,7 +46,7 @@ type Transfer struct {
 }
 
 type User struct {
-	ID             int32       `json:"id"`
+	ID             uuid.UUID   `json:"id"`
 	Email          string      `json:"email"`
 	HashedPassword string      `json:"hashed_password"`
 	CreatedAt      time.Time   `json:"created_at"`

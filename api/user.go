@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/v5/pgtype"
 	db "github.com/valrichter/Ualapp/db/sqlc"
@@ -103,7 +104,7 @@ func (u *User) updateUsername(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, UserResponse{}.toUserResponse(&user))
 }
 
-func (s *Server) GetActiveUserID(ctx *gin.Context) (int32, error) {
+func (s *Server) GetActiveUserID(ctx *gin.Context) (uuid.UUID, error) {
 	// TODO: Refactor middleware authorization
 	// authorizationPayload = user_id
 	payload := ctx.MustGet("user_id")
@@ -111,7 +112,7 @@ func (s *Server) GetActiveUserID(ctx *gin.Context) (int32, error) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"error": "unauthorized to access resource",
 		})
-		return 0, fmt.Errorf("unauthorized to access resource")
+		return uuid.Nil, fmt.Errorf("unauthorized to access resource")
 	}
 
 	user, err := s.store.GetUserByEmail(ctx, payload.(*token.Payload).Username)
@@ -120,11 +121,11 @@ func (s *Server) GetActiveUserID(ctx *gin.Context) (int32, error) {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "unauthorized to access resource",
 			})
-			return 0, fmt.Errorf("unauthorized to access resource")
+			return uuid.Nil, fmt.Errorf("unauthorized to access resource")
 		}
 
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-		return 0, err
+		return uuid.Nil, err
 	}
 
 	return user.ID, nil
@@ -132,7 +133,7 @@ func (s *Server) GetActiveUserID(ctx *gin.Context) (int32, error) {
 
 // userResponse struct to create a response for a new user
 type UserResponse struct {
-	ID        int32     `json:"id"`
+	ID        uuid.UUID `json:"id"`
 	Email     string    `json:"email"`
 	Username  string    `json:"username"`
 	CreatedAt time.Time `json:"created_at"`

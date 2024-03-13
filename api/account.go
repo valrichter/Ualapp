@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -23,7 +24,7 @@ type Account struct {
 
 type AccountResponse struct {
 	ID            int32     `json:"id"`
-	UserID        int32     `json:"user_id"`
+	UserID        uuid.UUID `json:"user_id"`
 	Balance       int64     `json:"balance"`
 	Currency      string    `json:"currency"`
 	CreatedAt     time.Time `json:"created_at"`

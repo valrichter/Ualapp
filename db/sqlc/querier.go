@@ -7,6 +7,7 @@ package db
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -22,10 +23,10 @@ type Querier interface {
 	DeleteAllTransfers(ctx context.Context) error
 	DeleteAllUsers(ctx context.Context) error
 	DeleteMoneyRecordById(ctx context.Context, id int32) error
-	DeleteUser(ctx context.Context, id int32) error
+	DeleteUser(ctx context.Context, id uuid.UUID) error
 	GetAccountByAccountNumber(ctx context.Context, accountNumber pgtype.Text) (GetAccountByAccountNumberRow, error)
 	GetAccountById(ctx context.Context, id int32) (Account, error)
-	GetAccountByUserId(ctx context.Context, userID int32) ([]Account, error)
+	GetAccountByUserId(ctx context.Context, userID uuid.UUID) ([]Account, error)
 	GetEntryById(ctx context.Context, id int32) (Entry, error)
 	GetEntryByUserId(ctx context.Context, accountID int32) ([]Entry, error)
 	GetMoneyRecordByReference(ctx context.Context, reference string) (MoneyRecord, error)
@@ -34,7 +35,7 @@ type Querier interface {
 	GetTransferFromAccountId(ctx context.Context, fromAccountID int32) ([]Transfer, error)
 	GetTransferToAccountId(ctx context.Context, toAccountID int32) ([]Transfer, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
-	GetUserById(ctx context.Context, id int32) (User, error)
+	GetUserById(ctx context.Context, id uuid.UUID) (User, error)
 	ListAccounts(ctx context.Context, arg ListAccountsParams) ([]Account, error)
 	ListEntries(ctx context.Context, arg ListEntriesParams) ([]Entry, error)
 	ListTransfers(ctx context.Context, arg ListTransfersParams) ([]Transfer, error)
