@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/v5/pgconn"
 	db "github.com/valrichter/Ualapp/db/sqlc"
@@ -37,8 +38,8 @@ func (auth Auth) router(server *Server) {
 	auth.server.tokenMaker = tokenMaker
 
 	serverGroup := server.router.Group("/auth")
-	serverGroup.POST("/login", auth.login)
 	serverGroup.POST("/register", auth.register)
+	serverGroup.POST("/login", auth.login)
 }
 
 // userRequest struct to create a new user
@@ -111,6 +112,7 @@ func (auth Auth) register(ctx *gin.Context) {
 	}
 
 	arg := db.CreateUserParams{
+		ID:             uuid.New(),
 		Email:          req.Email,
 		HashedPassword: hashedPassword,
 	}
