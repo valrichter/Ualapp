@@ -19,6 +19,11 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
   - SQL compiler
   - **Input**: Se escribe la consulta en SQL --> **Blackbox**: [sqlc] --> **Output**: Funciones en Golang con interfaces para poder utilizarlas y hacer consultas
 
+## 📚 Documentacion
+
+- [Frontend](https://dbdocs.io/valrichter/ualapp-frontend)
+- [Desineño de la Base de Datos: Diagrama Entidad-Relacion (DER)](https://dbdocs.io/valrichter/go-ualapp)
+
 ## 📌 Proyecto
 
 - [x] CRUD de usuarios
@@ -29,10 +34,6 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 - [x] Encriptacion y desencriptacion con PASETO
 - [x] Implementacion de la creacion de cuenta en ARS
 - [x] Implementacion de las transferencias de dinero entre cuentas
-
-## 📚 Documentacion
-
-- [Diagrama Entidad-Relacion (DER)](https://dbdocs.io/valrichter/go-ualapp)
 
 ## 🚀 Desarrollo
 
