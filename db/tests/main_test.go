@@ -77,7 +77,7 @@ func TestMain(m *testing.M) {
 
 	code := m.Run()
 
-	teardown(connPool)
+	// teardown(connPool)
 
 	os.Exit(code)
 
