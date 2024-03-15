@@ -36,8 +36,7 @@ func TestMain(m *testing.M) {
 	// create database for testing
 	_, err = connPool.Exec(context.Background(), fmt.Sprintf("CREATE DATABASE %s;", testDBName))
 	if err != nil {
-		log.Fatalf("Encountered an error creating database teardown(connPool)%v", err)
-
+		log.Fatalf("Encountered an error creating database teardown (connPool) %v", err)
 	}
 
 	testConnPool, err := pgxpool.New(context.Background(), config.DBSource+testDBName+sslmode)
