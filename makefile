@@ -24,13 +24,9 @@ db_down:
 
 # Run migrations
 DB_SOURCE=postgresql://root:secret@localhost:5432/ualapp?sslmode=disable
-DB_SOURCE_TEST=postgresql://root:secret@localhost:5432/test_ualapp?sslmode=disable
 migrate_up:
 	# Migrate up
 	migrate -path db/migrations -database "$(DB_SOURCE)" -verbose up
-
-migrate_up_test:
-	migrate -path db/migrations -database "$(DB_SOURCE_TEST)" -verbose up
 
 migrate_down:
 	# Migrate down
