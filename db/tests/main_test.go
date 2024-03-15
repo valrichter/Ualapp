@@ -36,20 +36,20 @@ func TestMain(m *testing.M) {
 	// create database for testing
 	_, err = connPool.Exec(context.Background(), fmt.Sprintf("CREATE DATABASE %s;", testDBName))
 	if err != nil {
-		teardown(connPool)
-		log.Fatalf("Encountered an error creating database %v", err)
+		log.Fatalf("Encountered an error creating database teardown(connPool)%v", err)
+
 	}
 
 	testConnPool, err := pgxpool.New(context.Background(), config.DBSource+testDBName+sslmode)
 	if err != nil {
-		teardown(connPool)
 		log.Fatalf("Cannot connect to database %v", err)
+		teardown(connPool)
 	}
 
 	conn, err := testConnPool.Acquire(context.Background())
 	if err != nil {
-		teardown(connPool)
 		log.Fatalf("Cannot acquire connection %v", err)
+		teardown(connPool)
 	}
 	connConfig := conn.Conn().Config()
 
@@ -57,28 +57,27 @@ func TestMain(m *testing.M) {
 
 	driver, err := postgres.WithInstance(stdconn, &postgres.Config{})
 	if err != nil {
-		teardown(connPool)
 		log.Fatalf("Cannot create driver %v", err)
+		teardown(connPool)
 	}
 
 	mig, err := migrate.NewWithDatabaseInstance(
 		fmt.Sprintf("file://%s", "../migrations"), config.DBDriver, driver)
 	if err != nil {
-		teardown(connPool)
 		log.Fatalf("Cannot create migrate instance %v", err)
+		teardown(connPool)
 	}
 
 	if err = mig.Up(); err != nil && err != migrate.ErrNoChange {
-		teardown(connPool)
 		log.Fatalf("Cannot migrate database %v", err)
+		teardown(connPool)
 	}
 
 	testStore = db.NewPostgreSQLStore(testConnPool)
 
 	code := m.Run()
 
-	// teardown(connPool)
-
+	teardown(connPool)
 	os.Exit(code)
 
 	defer testConnPool.Close()
