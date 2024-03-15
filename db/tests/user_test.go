@@ -23,7 +23,6 @@ func cleanDB() {
 
 // createRandomUser creates a random user of database for tests
 func createRandomUser(t *testing.T) db.User {
-
 	password := util.RandomPassword(util.RandomInt(6, 20))
 	hashedPassword, err := util.HashPassword(password)
 	require.NoError(t, err)
