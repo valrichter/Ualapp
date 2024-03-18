@@ -6,13 +6,14 @@ create_migration:
 	# Create a new migration
 	migrate create -ext sql -dir db/migrations -seq $(name)
 
-postgres_up:
+app_up:
 	# Start Postgres service
 	docker compose up -d
 
-postgres_down:
+app_down:
 	# Stop Postgres service
 	docker compose down
+	docker rmi ualapp_api:latest
 
 db_up:
 	# Database up
@@ -35,6 +36,10 @@ migrate_down:
 sqlc:
 	# Run sqlc
 	sqlc generate
+
+docker_app:
+	docker build -t ualapp_api .
+	docker run -p 8080:8080 ualapp_api
 
 test:
 	# Run tests

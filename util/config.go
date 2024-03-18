@@ -7,6 +7,7 @@ type Config struct {
 	DBDriver          string `mapstructure:"DB_DRIVER"`
 	DBSource          string `mapstructure:"DB_SOURCE"`
 	DBName            string `mapstructure:"DB_NAME"`
+	MigrationURL      string `mapstructure:"MIGRATION_URL"`
 	TokenSimmetricKey string `mapstructure:"TOKEN_SYMMETRIC_KEY"`
 }
 
