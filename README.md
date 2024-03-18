@@ -22,7 +22,7 @@ Proyecto basico para simular el funcionamiento de una fintech basada en Next.js 
 ## 📚 Documentacion
 
 - [Frontend](https://dbdocs.io/valrichter/ualapp-frontend)
-- [Desineño de la Base de Datos: Diagrama Entidad-Relacion (DER)](https://dbdocs.io/valrichter/go-ualapp)
+- [Diseño de la Base de Datos (DER)](https://dbdocs.io/valrichter/go-ualapp)
 
 ## 📌 Proyecto
 
