@@ -33,11 +33,10 @@ make app_up
 ## 📌 Proyecto
 
 - [x] CRUD de usuarios
+- [x] Implemetacion del registro de usuarios
+- [x] Implemetacion del login de usuarios
+- [x] Hashing y verificacion de contraseñas: encriptacion y desencriptacion con PASETO
 - [x] Autenticacion y verificacion la identidad de los usuarios
-- [x] Implemetacion del Registro de usuarios
-- [x] Implemetacion del Login de usuarios
-- [x] Hashing y verificacion de contraseñas
-- [x] Encriptacion y desencriptacion con PASETO
 - [x] Implementacion de la creacion de cuenta en ARS
 - [x] Implementacion de las transferencias de dinero entre cuentas
 
@@ -56,7 +55,7 @@ make app_up
 - Configuracion del archivo `app.env`
 - API server recfator
 - Se agrego el endopint `/list_users` para listar todos los usuarios
-- - Se agrego el endopint `/create_user` para listar todos los usuarios
+- Se agrego el endopint `/create_user` para listar todos los usuarios
 - Se agrego bases de datos dedicada para testeo
 - Se agrego el endpoint `auth/login` para autenticar un usuario
 - Se agrego token de autenticacion para el endpoint `auth/login`
