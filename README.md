@@ -1,44 +1,55 @@
-# 🏦 Ualapp Fintech
+# 🏦 Ualappbank
 
-Proyecto basico para simular el funcionamiento de una fintech basada en React y Go
+Proyecto para simular el funcionamiento basico de una fintech echo en Go y React
 
-## 📚 Levantar proyecto Backend en Linux (tener Docker instalado)
+##  Levantar proyecto Backend en Linux
+
+Pre-requisitos:
+
+- Instalar `Docker`
+- Instalar `make`
 
 ```bash
 make app_up
 ```
 
-## 🔨 Tecnologias
+## 📦 Tecnologias
 
 - **React** v18.2.0
-- **Go** v1.22.0
+- **Go** v1.22.2
 - **PostgreSQL** v16.1
 - **Docker** v25.0.3
 - **Docker Compose** v2.24.5
 - **Make** v4.3
 
-## 📦 Herramietas
+## 🔨 Herramietas
 
 - **Migrate CLI** v4.14.1
-  - Manejar migraciones de base de datos ya que los ORM son muy lentos para una fintech, por lo que es preferible usar SQL puro
+  - Manejar migraciones de base de datos pir que los ORM son lentos en el contexto de una fintech, entonces es preferible usar SQL
 - **sqlc CLI** v1.25.0
   - SQL compiler
   - **Input**: Se escribe la consulta en SQL --> **Blackbox**: [sqlc] --> **Output**: Funciones en Golang con interfaces para poder utilizarlas y hacer consultas
+- Visual Studio Code
+- Postman
+- TablePlus
 
 ## 📚 Documentacion
 
 - [Frontend](https://github.com/valrichter/ualapp-frontend)
-- [Diseño de la Base de Datos (DER)](https://dbdocs.io/valrichter/go-ualapp)
+- [Diagrama entidad-relacion (DB)](https://dbdocs.io/valrichter/go-ualapp)
 
 ## 📌 Proyecto
 
 - [x] CRUD de usuarios
-- [x] Implemetacion del registro de usuarios
-- [x] Implemetacion del login de usuarios
-- [x] Hashing y verificacion de contraseñas: encriptacion y desencriptacion con PASETO
+- [x] Implemetar el registro de usuarios
+- [x] Implemetar el login de usuarios
+- [x] Hashing y verificacion de contraseñas
 - [x] Autenticacion y verificacion la identidad de los usuarios
-- [x] Implementacion de la creacion de cuenta en ARS
-- [x] Implementacion de las transferencias de dinero entre cuentas
+- [x] Implemetar la creacion de cuenta en ARS
+- [x] Implemetar las transferencias de dinero entre cuentas
+- [ ] Separarcion correcta de entornos de desarrollo y testing
+- [ ] Refatorizar codigo mal diseñado
+- [ ] Implemetar UI con React
 
 ## 🚀 Desarrollo
 
@@ -48,6 +59,7 @@ make app_up
 - Automatizacion de comandos con Makefile para ejecutar el contenedor de postgres, crear la base de datos e insertar las tablas
 - Agregado de random generators en `utils/random.go`
 - Agregado de hashing de contraseñas en `utils/password.go` con la libreria bcrypt y testeo de la misma
+- Encriptacion y desencriptacion de contraseñas con PASETO
 - Testeadas todas la queries creadas con `sqlc` para la tablas `users`
 - Impletancion de `Store` para conectarse a postgres
 - Implemetacion del pool de conexiones para la base de datos `pgxpool.Pool` (Singleton)
@@ -68,20 +80,25 @@ make app_up
 - Implementacion de la api para transferencias de dinero entre cuentas
 - Agregado de la columna `username` a la tabla `users`
 - Implementacion de la api para actualizar el `username` de una cuenta
+- Generacion de numero de cuentas
+- Endpoint `/get-account-by-number` para obtener una cuenta por su numero
 
 ---
 
-- Generacion de numero de cuentas
-- Endpoint `/get-account-by-number` para obtener una cuenta por su numero
+- Correncion de los user tests de la base de datos
 
 ## 🧪 Tests
 
 ### Base de datos `ualapp`
 
-- [x] Tests para todas las queries de la tabla `users`
-- [x] Uso de go rutines para el `TestListUsers`
+- [x] Tests queries de la tabla `users`
+  - Uso de go rutines para el `TestListUsers`
+- [ ] Tests queries de la tabla `accounts`
+- [ ] Tests queries de la tabla `transfers`
+- [ ] Tests queries de la tabla `entries`
+- [ ] Tests queries de la tabla `money_record`
 
 ### Util
   
-- [x] Password hashing & verification
-- [ ] Random generator
+- [x] Test password hashing & verification
+- [ ] Test random generator
