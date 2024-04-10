@@ -37,7 +37,7 @@ make app_up
 
 - [Frontend](https://github.com/valrichter/ualapp-frontend)
 - [API Postman docs](https://documenter.getpostman.com/view/23701330/2sA3BhctNK)
-- [Diagrama entidad-relacion (DB)](https://dbdocs.io/valrichter/go-ualapp)
+- [Diagrama entidad-relacion (DB)](https://dbdocs.io/valrichter/ualapp-db)
 
 ## 📌 Proyecto
 
