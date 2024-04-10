@@ -2,7 +2,7 @@
 
 Proyecto para simular el funcionamiento basico de una fintech echo en Go y React
 
-##  Levantar proyecto Backend en Linux
+## 🚀 Levantar proyecto Backend en Linux
 
 Pre-requisitos:
 
@@ -51,7 +51,7 @@ make app_up
 - [ ] Refatorizar codigo mal diseñado
 - [ ] Implemetar UI con React
 
-## 🚀 Desarrollo
+## 🌱 Desarrollo
 
 - Diseño de la tabla de Usuario
 - Creacion de los archivos sql de migracion para la base de datos
@@ -81,7 +81,7 @@ make app_up
 - Agregado de la columna `username` a la tabla `users`
 - Implementacion de la api para actualizar el `username` de una cuenta
 - Generacion de numero de cuentas
-- Endpoint `/get-account-by-number` para obtener una cuenta por su numero
+- Endpoint `/get-account-by-number` para obtener una cuenta a partir de un numero de cuenta
 
 ---
 
