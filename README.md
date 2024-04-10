@@ -2,7 +2,7 @@
 
 Proyecto para simular el funcionamiento basico de un sistema bancario / fintech. Creado en Go y React
 
-## 🚀 Levantar proyecto Backend en Linux
+## 🚀 Correr el proyecto en Linux
 
 Pre-requisitos:
 
