@@ -2,7 +2,7 @@
 
 Proyecto basico para simular el funcionamiento de una fintech basada en React y Go
 
-## 📚 Levantar proyecto en Linux (tener Docker instalado)
+## 📚 Levantar proyecto Backend en Linux (tener Docker instalado)
 
 ```bash
 make app_up
