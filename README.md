@@ -47,6 +47,7 @@ make app_up
 - [x] Autenticacion y verificacion la identidad de los usuarios
 - [x] Implemetar la creacion de cuenta en ARS
 - [x] Implemetar las transferencias de dinero entre cuentas
+- [ ] Documentar API correctamente
 - [ ] Separarcion correcta de entornos de desarrollo y testing
 - [ ] Aplicar mas github actions
 - [ ] Refactorizar codigo mal diseñado
