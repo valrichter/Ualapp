@@ -104,3 +104,5 @@ make app_up
   
 - [x] Test password hashing & verification
 - [ ] Test random generator
+
+### API
