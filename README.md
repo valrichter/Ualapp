@@ -1,6 +1,6 @@
-# 🏦 Ualappbank
+# 🏦 Ualapp
 
-Proyecto para simular el funcionamiento basico de una fintech echo en Go y React
+Proyecto para simular el funcionamiento basico de un sistema bancario / fintech. Creado en Go y React
 
 ## 🚀 Levantar proyecto Backend en Linux
 
@@ -48,7 +48,8 @@ make app_up
 - [x] Implemetar la creacion de cuenta en ARS
 - [x] Implemetar las transferencias de dinero entre cuentas
 - [ ] Separarcion correcta de entornos de desarrollo y testing
-- [ ] Refatorizar codigo mal diseñado
+- [ ] Aplicar mas github actions
+- [ ] Refactorizar codigo mal diseñado
 - [ ] Implemetar UI con React
 
 ## 🌱 Desarrollo
