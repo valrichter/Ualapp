@@ -8,12 +8,13 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/require"
 	db "github.com/valrichter/Ualapp/db/sqlc"
 	"github.com/valrichter/Ualapp/util"
 )
 
-// cleanDB deletes all users from database
+// Deletes all users from test database
 func cleanDB() {
 	err := testStore.DeleteAllUsers(context.Background())
 	if err != nil {
@@ -21,9 +22,10 @@ func cleanDB() {
 	}
 }
 
-// createRandomUser creates a random user of database for tests
+// Creates a random user in test database
 func createRandomUser(t *testing.T) db.User {
 	password := util.RandomPassword(util.RandomInt(6, 20))
+
 	hashedPassword, err := util.HashPassword(password)
 	require.NoError(t, err)
 
@@ -36,7 +38,6 @@ func createRandomUser(t *testing.T) db.User {
 	user, err := testStore.CreateUser(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
-
 	require.Equal(t, arg.Email, user.Email)
 	require.Equal(t, arg.HashedPassword, user.HashedPassword)
 	require.NotZero(t, user.CreatedAt)
@@ -50,98 +51,42 @@ func TestCreateUser(t *testing.T) {
 	createRandomUser(t)
 }
 
-// TestCreateUser tests the CreateUser function of database
-func TestGetUser(t *testing.T) {
-	user1 := createRandomUser(t)
-	user2, err := testStore.GetUserById(context.Background(), user1.ID)
-	require.NoError(t, err)
-	require.NotEmpty(t, user2)
-
-	require.Equal(t, user1.Username, user2.Username)
-	require.Equal(t, user1.HashedPassword, user2.HashedPassword)
-	require.Equal(t, user1.Username, user2.Username)
-	require.Equal(t, user1.Email, user2.Email)
-
-	require.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, time.Second)
-}
-
-// TestUpdateUser tests the UpdateUserPassword function of database
-func TestUpdateUserPassword(t *testing.T) {
-	defer cleanDB()
-
-	user := createRandomUser(t)
-	newPassword := util.RandomPassword(util.RandomInt(6, 20))
-	newHashedPassword, err := util.HashPassword(newPassword)
-	require.NoError(t, err)
-
-	arg := db.UpdateUserPasswordParams{
-		HashedPassword: newHashedPassword,
-		ID:             user.ID,
-		UpdatedAt:      time.Now(),
-	}
-
-	updatedUser, err := testStore.UpdateUserPassword(context.Background(), arg)
-	require.NoError(t, err)
-	require.NotEmpty(t, updatedUser)
-
-	require.Equal(t, arg.HashedPassword, updatedUser.HashedPassword)
-	require.Equal(t, user.Email, updatedUser.Email)
-	require.Equal(t, arg.ID, updatedUser.ID)
-	require.WithinDuration(t, user.UpdatedAt, time.Now(), 2*time.Second)
-}
-
-// TestGetUserbyID tests the GetUserById function of database
-func TestGetUserbyID(t *testing.T) {
+func TestGetUserById(t *testing.T) {
 	defer cleanDB()
 
 	user := createRandomUser(t)
 
-	newUser, err := testStore.GetUserById(context.Background(), user.ID)
+	userFromDB, err := testStore.GetUserById(context.Background(), user.ID)
 	require.NoError(t, err)
-	require.NotEmpty(t, newUser)
-
-	require.Equal(t, user.Email, newUser.Email)
-	require.Equal(t, user.HashedPassword, newUser.HashedPassword)
-	require.WithinDuration(t, user.UpdatedAt, time.Now(), 2*time.Second)
-	require.WithinDuration(t, user.CreatedAt, newUser.CreatedAt, time.Second)
-
+	require.NotEmpty(t, userFromDB)
+	require.Equal(t, user.ID, userFromDB.ID)
+	require.Equal(t, user.Email, userFromDB.Email)
+	require.Equal(t, user.HashedPassword, userFromDB.HashedPassword)
+	require.WithinDuration(t, user.CreatedAt, userFromDB.CreatedAt, 2*time.Second)
+	require.Equal(t, user.Username, userFromDB.Username)
 }
 
-// TestGetUserByEmail tests the GetUserByEmail function of database
 func TestGetUserByEmail(t *testing.T) {
 	defer cleanDB()
 
 	user := createRandomUser(t)
 
-	newUser, err := testStore.GetUserByEmail(context.Background(), user.Email)
+	userFromDB, err := testStore.GetUserByEmail(context.Background(), user.Email)
 	require.NoError(t, err)
-	require.NotEmpty(t, newUser)
-
-	require.Equal(t, user.Email, newUser.Email)
-	require.Equal(t, user.HashedPassword, newUser.HashedPassword)
-	require.WithinDuration(t, user.CreatedAt, newUser.CreatedAt, time.Second)
+	require.NotEmpty(t, userFromDB)
+	require.Equal(t, user.ID, userFromDB.ID)
+	require.Equal(t, user.Email, userFromDB.Email)
+	require.Equal(t, user.HashedPassword, userFromDB.HashedPassword)
+	require.WithinDuration(t, user.CreatedAt, userFromDB.CreatedAt, 2*time.Second)
+	require.Equal(t, user.Username, userFromDB.Username)
 }
 
-// TestDeleteUser tests the DeleteUser function of database
-func TestDeleteUser(t *testing.T) {
-	defer cleanDB()
-
-	user := createRandomUser(t)
-
-	err := testStore.DeleteUser(context.Background(), user.ID)
-	require.NoError(t, err)
-
-	newUser, err := testStore.GetUserById(context.Background(), user.ID)
-	require.Error(t, err)
-	require.Empty(t, newUser)
-}
-
-// TestListUser tests the ListUsers function
 func TestListUser(t *testing.T) {
 	defer cleanDB()
 
+	usersAmount := util.RandomInt(1, 30)
 	var wg sync.WaitGroup
-	for i := 0; i < 30; i++ {
+	for i := 0; i < usersAmount; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
@@ -151,13 +96,73 @@ func TestListUser(t *testing.T) {
 	wg.Wait()
 
 	arg := db.ListUsersParams{
-		Limit:  30,
-		Offset: 0,
+		Limit:  int32(usersAmount),
+		Offset: int32(util.RandomInt(0, usersAmount-1)),
 	}
 
 	users, err := testStore.ListUsers(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, users)
-	require.Equal(t, 30, len(users))
+	require.Equal(t, arg.Limit-arg.Offset, int32(len(users)))
+}
 
+func TestUpdateUserPassword(t *testing.T) {
+	defer cleanDB()
+
+	user := createRandomUser(t)
+	newPassword := util.RandomPassword(util.RandomInt(6, 20))
+
+	newPasswordHashed, err := util.HashPassword(newPassword)
+	require.NoError(t, err)
+	require.NotEmpty(t, newPasswordHashed)
+
+	arg := db.UpdateUserPasswordParams{
+		HashedPassword: newPasswordHashed,
+		UpdatedAt:      time.Now(),
+		ID:             user.ID,
+	}
+
+	updatedUser, err := testStore.UpdateUserPassword(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, updatedUser)
+	require.Equal(t, arg.HashedPassword, updatedUser.HashedPassword)
+	require.WithinDuration(t, arg.UpdatedAt, time.Now(), 2*time.Second)
+	require.Equal(t, arg.ID, updatedUser.ID)
+	require.Equal(t, user.ID, updatedUser.ID)
+	require.Equal(t, user.Email, updatedUser.Email)
+	require.NotEqual(t, user.HashedPassword, updatedUser.HashedPassword)
+	require.NotEqual(t, user.UpdatedAt, updatedUser.UpdatedAt)
+}
+
+func TestUpdateUsername(t *testing.T) {
+	defer cleanDB()
+
+	user := createRandomUser(t)
+
+	arg := db.UpdateUsernameParams{
+		Username: pgtype.Text{String: util.RandomUsername(), Valid: true},
+		ID:       user.ID,
+	}
+
+	updatedUser, err := testStore.UpdateUsername(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, updatedUser)
+	require.Equal(t, arg.Username, updatedUser.Username)
+	require.Equal(t, arg.ID, updatedUser.ID)
+	require.Equal(t, user.Email, updatedUser.Email)
+	require.Equal(t, user.HashedPassword, updatedUser.HashedPassword)
+	require.NotEqual(t, user.UpdatedAt, updatedUser.UpdatedAt)
+}
+
+func TestDeleteUser(t *testing.T) {
+	defer cleanDB()
+
+	user := createRandomUser(t)
+
+	err := testStore.DeleteUser(context.Background(), user.ID)
+	require.NoError(t, err)
+
+	userFromDB, err := testStore.GetUserById(context.Background(), user.ID)
+	require.Error(t, err)
+	require.Empty(t, userFromDB)
 }
