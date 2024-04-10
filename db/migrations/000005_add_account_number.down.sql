@@ -1,1 +1,2 @@
-ALTER TABLE accounts DROP COLUMN account_number;
+ALTER TABLE accounts
+DROP COLUMN account_number;

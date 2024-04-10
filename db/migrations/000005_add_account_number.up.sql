@@ -1,1 +1,2 @@
-ALTER TABLE accounts ADD COLUMN account_number VARCHAR(11) UNIQUE;
+ALTER TABLE accounts
+ADD COLUMN account_number VARCHAR(11) UNIQUE;
