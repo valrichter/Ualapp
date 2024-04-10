@@ -19,9 +19,9 @@ import (
 // Contains a gin engine to serve HTTP requests
 
 type Server struct {
-	store  db.Store
-	router *gin.Engine
-	config util.Config
+	store      db.Store
+	router     *gin.Engine
+	config     util.Config
 	tokenMaker token.Maker
 }
 
@@ -39,9 +39,9 @@ func NewHTTPServer(store db.Store) (*Server, error) {
 	}
 
 	server := &Server{
-		store:  store,
+		store:      store,
 		tokenMaker: tokenMaker,
-		config: config,
+		config:     config,
 	}
 
 	// create routes
@@ -57,7 +57,11 @@ func (server *Server) setupRouter() {
 		v.RegisterValidation("currency", validCurrency)
 	}
 
-	router.Use(cors.Default())
+	// Configurar CORS
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"*"}                             // Permitir solicitudes desde cualquier origen
+	config.AllowHeaders = []string{"Authorization", "Content-Type"} // Permitir la cabecera 'Authorization'
+	router.Use(cors.New(config))
 
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"message": "Welcome to Ualapp!"})

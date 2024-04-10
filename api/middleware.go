@@ -14,7 +14,7 @@ import (
 // TODO: Refactor middleware
 
 const (
-	authorizationHeaderKey  = "authorization"
+	authorizationHeaderKey  = "Authorization"
 	authorizationTypeBearer = "bearer"
 	authorizationPayloadKey = "user_id"
 )
