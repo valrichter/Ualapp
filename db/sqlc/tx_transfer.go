@@ -57,9 +57,9 @@ func (store *PostgreSQLStore) TransferTx(ctx context.Context, req TransferTxRequ
 		// 4. Update accounts with new balances
 		// Check FromAccountID < ToAccountID for avoiding deadlock
 		if req.FromAccountID < req.ToAccountID {
-			res.FromAccount, res.ToAccount, err = UpdateMoney(ctx, q, req.FromAccountID, -req.Amount, req.ToAccountID, req.Amount)
+			res.FromAccount, res.ToAccount, err = UpdateMoney(ctx, q, req.FromAccountID, -req.Amount, req.ToAccountID, +req.Amount)
 		} else {
-			res.ToAccount, res.FromAccount, err = UpdateMoney(ctx, q, req.ToAccountID, req.Amount, req.FromAccountID, -req.Amount)
+			res.ToAccount, res.FromAccount, err = UpdateMoney(ctx, q, req.ToAccountID, +req.Amount, req.FromAccountID, -req.Amount)
 		}
 
 		return err
