@@ -93,3 +93,5 @@ func teardown(conn *pgxpool.Pool) {
 // TODO: add tests for account.sql.go
 
 // TODO: add tests for entries.sql.go
+
+// TODO: add tests for t.sql.go

@@ -11,7 +11,7 @@ type TransferTxRequest struct {
 	Amount        int64 `json:"amount"`
 }
 
-// Contains the res of a transfer transaction
+// Contains the response of a transfer transaction
 type TransferTxResponse struct {
 	Transfer    Transfer `json:"transfer"`
 	FromAccount Account  `json:"from_account"`
@@ -20,7 +20,8 @@ type TransferTxResponse struct {
 	ToEntry     Entry    `json:"to_entry"`
 }
 
-// Money transfer from one account to another. It create a transfer record, Update account entries, and update account balances within a single database transaction.
+// Money transfer from one account to another. 
+// It create a transfer record, update account entries, and update account balances in a single database transaction.
 
 func (store *PostgreSQLStore) TransferTx(ctx context.Context, req TransferTxRequest) (TransferTxResponse, error) {
 

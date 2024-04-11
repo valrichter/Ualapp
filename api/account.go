@@ -290,28 +290,15 @@ func (account *Account) addMoney(ctx *gin.Context) {
 		return
 	}
 
-	argMoney := db.CreateMoneyRecordParams{
-		UserID:    userId,
-		Status:    "pending",
+	argMoney := db.CreateEntryParams{
+		AccountID: obj.ToAccountID,
 		Amount:    obj.Amount,
-		Reference: obj.Reference,
 	}
 
-	_, err = account.server.store.CreateMoneyRecord(context.Background(), argMoney)
+	_, err = account.server.store.CreateEntry(context.Background(), argMoney)
 	if err != nil {
-		if pgErr, ok := err.(*pgconn.PgError); ok {
-
-			// 23505 is for unique_violation
-			if pgErr.Code == "23505" {
-				ctx.JSON(http.StatusBadRequest, gin.H{
-					"error": "Record with that reference already exists",
-				})
-				return
-			}
-		} else {
-			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-			return
-		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
 	}
 
 	// check money rerod to confirm trasaction status
