@@ -89,6 +89,7 @@ make app_up
 ---
 
 - Correncion de los user tests de la base de datos
+- Correcion de transfer tests & account test
 
 ## 🧪 Tests
 
