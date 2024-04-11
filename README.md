@@ -104,6 +104,4 @@ make app_up
 ### Util
   
 - [x] Test password hashing & verification
-- [ ] Test random generator
-
-### API
+- [ ] Test random generators
