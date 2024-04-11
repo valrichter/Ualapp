@@ -12,10 +12,7 @@ SELECT * FROM accounts WHERE user_id = $1;
 -- name: ListAccounts :many
 SELECT * FROM accounts ORDER BY id LIMIT $1 OFFSET $2;
 
--- name: UpdateAccountsBalance :one
-UPDATE accounts SET balance = $1 WHERE id = $2 RETURNING *;
-
--- name: UpdateAccountBalanceNew :one
+-- name: UpdateAccountBalance :one
 UPDATE accounts
 SET
     balance = balance + sqlc.arg (amount)

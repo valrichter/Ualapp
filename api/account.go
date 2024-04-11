@@ -303,12 +303,12 @@ func (account *Account) addMoney(ctx *gin.Context) {
 
 	// check money rerod to confirm trasaction status
 
-	argBalance := db.UpdateAccountBalanceNewParams{
+	argBalance := db.UpdateAccountBalanceParams{
 		ID:     obj.ToAccountID,
 		Amount: obj.Amount,
 	}
 
-	_, err = account.server.store.UpdateAccountBalanceNew(context.Background(), argBalance)
+	_, err = account.server.store.UpdateAccountBalance(context.Background(), argBalance)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
