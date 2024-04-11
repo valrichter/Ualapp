@@ -11,11 +11,14 @@ import (
 )
 
 func TestTransferTx(t *testing.T) {
-	account1 := createRandomAccount(t)
-	account2 := createRandomAccount(t)
-	fmt.Println(">> Before [", "from:", account1.Balance, "to:", account2.Balance, "]")
-	amount := int64(10)
+	user1 := createRandomUser(t)
+	user2 := createRandomUser(t)
+	account1 := createRandomAccount(t, user1)
+	account2 := createRandomAccount(t, user2)
 
+	fmt.Println(">> Before [", "from:", account1.Balance, "to:", account2.Balance, "]")
+
+	amount := int64(10)
 	arg := db.TransferTxRequest{
 		FromAccountID: account1.ID,
 		ToAccountID:   account2.ID,
@@ -111,8 +114,11 @@ func TestTransferTx(t *testing.T) {
 }
 
 func TestTransferTxDeadlock(t *testing.T) {
-	account1 := createRandomAccount(t)
-	account2 := createRandomAccount(t)
+	user1 := createRandomUser(t)
+	user2 := createRandomUser(t)
+	account1 := createRandomAccount(t, user1)
+	account2 := createRandomAccount(t, user2)
+
 	fmt.Println(">> Before [", "from:", account1.Balance, "to:", account2.Balance, "]")
 
 	n := 10
