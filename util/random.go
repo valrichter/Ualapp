@@ -15,8 +15,8 @@ func RandomFullName() string {
 }
 
 // Generates a random amount of money
-func RandomMoney() int64 {
-	return int64(gofakeit.IntRange(0, 1000))
+func RandomMoney(min, max int) int64 {
+	return int64(gofakeit.IntRange(min, max))
 }
 
 // Generates a random email

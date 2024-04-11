@@ -15,7 +15,7 @@ func createRandomAccount(t *testing.T) db.Account {
 
 	arg := db.CreateAccountParams{
 		UserID:   user.ID,
-		Balance:  util.RandomMoney(),
+		Balance:  util.RandomMoney(0, 1000),
 		Currency: "ARS",
 	}
 
