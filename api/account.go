@@ -176,7 +176,7 @@ func (account *Account) getUserAccounts(ctx *gin.Context) {
 		return
 	}
 
-	accounts, err := account.server.store.GetAccountsFromUser(context.Background(), userId)
+	accounts, err := account.server.store.GetAccountsFromUserId(context.Background(), userId)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return

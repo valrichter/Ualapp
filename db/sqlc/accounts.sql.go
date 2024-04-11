@@ -14,9 +14,7 @@ import (
 )
 
 const createAccount = `-- name: CreateAccount :one
-INSERT INTO
-    accounts (user_id, balance, currency)
-VALUES ($1, $2, $3) RETURNING id, user_id, balance, currency, created_at, account_number
+INSERT INTO accounts (user_id, balance, currency) VALUES ($1, $2, $3) RETURNING id, user_id, balance, currency, created_at, account_number
 `
 
 type CreateAccountParams struct {
@@ -108,12 +106,12 @@ func (q *Queries) GetAccountById(ctx context.Context, id int32) (Account, error)
 	return i, err
 }
 
-const getAccountsFromUser = `-- name: GetAccountsFromUser :many
+const getAccountsFromUserId = `-- name: GetAccountsFromUserId :many
 SELECT id, user_id, balance, currency, created_at, account_number FROM accounts WHERE user_id = $1
 `
 
-func (q *Queries) GetAccountsFromUser(ctx context.Context, userID uuid.UUID) ([]Account, error) {
-	rows, err := q.db.Query(ctx, getAccountsFromUser, userID)
+func (q *Queries) GetAccountsFromUserId(ctx context.Context, userID uuid.UUID) ([]Account, error) {
+	rows, err := q.db.Query(ctx, getAccountsFromUserId, userID)
 	if err != nil {
 		return nil, err
 	}
