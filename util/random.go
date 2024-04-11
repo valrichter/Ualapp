@@ -33,7 +33,7 @@ func RandomInt(min, max int) int {
 
 // RandomPassword generates a random password
 func RandomPassword(length int) string {
-	password := gofakeit.Password(false, false, false, false, false, length)
+	password := gofakeit.Password(true, true, true, true, true, length)
 	return password
 }
 
