@@ -22,7 +22,7 @@ type TransferTxResponse struct {
 
 // Money transfer from one account to another.
 // It create a transfer record, update account entries, and update account balances in a single database transaction.
-
+// 
 func (store *PostgreSQLStore) TransferTx(ctx context.Context, req TransferTxRequest) (TransferTxResponse, error) {
 
 	var res TransferTxResponse

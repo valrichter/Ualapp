@@ -24,7 +24,7 @@ type Querier interface {
 	DeleteUser(ctx context.Context, id uuid.UUID) error
 	GetAccountByAccountNumber(ctx context.Context, accountNumber pgtype.Text) (GetAccountByAccountNumberRow, error)
 	GetAccountById(ctx context.Context, id int32) (Account, error)
-	GetAccountByUserId(ctx context.Context, userID uuid.UUID) ([]Account, error)
+	GetAccountsFromUser(ctx context.Context, userID uuid.UUID) ([]Account, error)
 	GetEntryById(ctx context.Context, id int32) (Entry, error)
 	GetEntryByUserId(ctx context.Context, accountID int32) ([]Entry, error)
 	GetTransferById(ctx context.Context, id int32) (Transfer, error)
