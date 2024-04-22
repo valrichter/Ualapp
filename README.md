@@ -89,7 +89,7 @@ make app_up
 ---
 
 - Correncion de los user tests de la base de datos
-- Correcion de transfer tests & account test
+- Correcion de transfer tests & account tests
 
 ## 🧪 Tests
 
@@ -103,7 +103,6 @@ make app_up
   - Uso de go rutines para el `TestDeleteAllAccounts`
 - [ ] Tests queries de la tabla `transfers`
 - [ ] Tests queries de la tabla `entries`
-- [ ] Tests queries de la tabla `money_record`
 
 ### Util
   
