@@ -14,7 +14,9 @@ import (
 )
 
 const createAccount = `-- name: CreateAccount :one
-INSERT INTO accounts (user_id, balance, currency) VALUES ($1, $2, $3) RETURNING id, user_id, balance, currency, created_at, account_number
+INSERT INTO
+    accounts (user_id, balance, currency)
+VALUES ($1, $2, $3) RETURNING id, user_id, balance, currency, created_at, account_number
 `
 
 type CreateAccountParams struct {
