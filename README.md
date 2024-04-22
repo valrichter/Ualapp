@@ -98,7 +98,9 @@ make app_up
 - [x] Tests queries de la tabla `users`
   - Uso de go rutines para el `TestListUsers`
 - [x] Tests para la `tx_transfer`
-- [ ] Tests queries de la tabla `accounts`
+- [x] Tests queries de la tabla `accounts`
+  - Uso de go rutines para el `TestListAccounts`
+  - Uso de go rutines para el `TestDeleteAllAccounts`
 - [ ] Tests queries de la tabla `transfers`
 - [ ] Tests queries de la tabla `entries`
 - [ ] Tests queries de la tabla `money_record`
