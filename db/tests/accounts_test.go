@@ -5,6 +5,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/require"
 	db "github.com/valrichter/Ualapp/db/sqlc"
 	"github.com/valrichter/Ualapp/util"
@@ -105,4 +107,34 @@ func TestUpdateAccountBalance(t *testing.T) {
 	require.Equal(t, account.Currency, accountFromDB.Currency)
 	require.NotZero(t, account.CreatedAt)
 	require.WithinDuration(t, account.CreatedAt, accountFromDB.CreatedAt, 2*time.Second)
+}
+
+func TestUpdateAccountNumber(t *testing.T) {
+	user := createRandomUser(t)
+	account := createRandomAccount(t, user)
+	accountNumber, err := util.GenerateAccountNumber(account.ID, account.Currency)
+	require.NoError(t, err)
+	require.NotEmpty(t, accountNumber)
+
+	arg := db.UpdateAccountNumberParams{
+		ID:            account.ID,
+		AccountNumber: pgtype.Text{String: accountNumber, Valid: true},
+	}
+
+	updatedAccount, err := testStore.UpdateAccountNumber(context.Background(), arg)
+	require.NoError(t, err)
+	require.Equal(t, updatedAccount.AccountNumber.String, accountNumber)
+}
+
+func TestDeleteAccount(t *testing.T) {
+	user := createRandomUser(t)
+	account := createRandomAccount(t, user)
+
+	err := testStore.DeleteAccount(context.Background(), account.ID)
+	require.NoError(t, err)
+
+	accountFromDB, err := testStore.GetAccountById(context.Background(), account.ID)
+	require.Error(t, err)
+	require.EqualError(t, err, pgx.ErrNoRows.Error())
+	require.Empty(t, accountFromDB)
 }
