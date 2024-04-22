@@ -37,16 +37,16 @@ func TestCreateAccount(t *testing.T) {
 
 func TestGetAccountById(t *testing.T) {
 	user := createRandomUser(t)
-	account1 := createRandomAccount(t, user)
+	account := createRandomAccount(t, user)
 
-	account2, err := testStore.GetAccountById(context.Background(), account1.ID)
+	accountFromDB, err := testStore.GetAccountById(context.Background(), account.ID)
 	require.NoError(t, err)
-	require.NotEmpty(t, account2)
-	require.Equal(t, account1.ID, account2.ID)
-	require.Equal(t, account1.UserID, account2.UserID)
-	require.Equal(t, account1.Balance, account2.Balance)
-	require.Equal(t, account1.Currency, account2.Currency)
-	require.WithinDuration(t, account1.CreatedAt, account2.CreatedAt, 2*time.Second)
+	require.NotEmpty(t, accountFromDB)
+	require.Equal(t, account.ID, accountFromDB.ID)
+	require.Equal(t, account.UserID, accountFromDB.UserID)
+	require.Equal(t, account.Balance, accountFromDB.Balance)
+	require.Equal(t, account.Currency, accountFromDB.Currency)
+	require.WithinDuration(t, account.CreatedAt, accountFromDB.CreatedAt, 2*time.Second)
 }
 
 func TestGetAccountsFromUserId(t *testing.T) {
@@ -58,8 +58,51 @@ func TestGetAccountsFromUserId(t *testing.T) {
 		accounts = append(accounts, createRandomAccount(t, user))
 	}
 
-	accountsFromDB, err := testStore.GetAccountsFromUserId(context.Background(), user.ID)
+	accountFromDB, err := testStore.GetAccountsFromUserId(context.Background(), user.ID)
 	require.NoError(t, err)
-	require.NotEmpty(t, accountsFromDB)
-	require.Len(t, accountsFromDB, len(accounts))
+	require.NotEmpty(t, accountFromDB)
+	require.Len(t, accountFromDB, len(accounts))
+}
+
+func TestListAccounts(t *testing.T) {
+	var accounts []db.Account
+	amountAccounts := 10
+
+	for i := 0; i < amountAccounts; i++ {
+		accounts = append(accounts, createRandomAccount(t, createRandomUser(t)))
+	}
+
+	arg := db.ListAccountsParams{
+		Limit:  int32(amountAccounts),
+		Offset: 0,
+	}
+
+	accountFromDB, err := testStore.ListAccounts(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, accountFromDB)
+	require.Len(t, accountFromDB, amountAccounts)
+	for _, a := range accounts {
+		require.Contains(t, accountFromDB, a)
+	}
+}
+
+// TestUpdateAccountBalance updates an account balance and checks that it was correctly updated
+func TestUpdateAccountBalance(t *testing.T) {
+	user := createRandomUser(t)
+	account := createRandomAccount(t, user)
+
+	arg := db.UpdateAccountBalanceParams{
+		ID:     account.ID,
+		Amount: util.RandomMoney(-1000, 1000),
+	}
+
+	accountFromDB, err := testStore.UpdateAccountBalance(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, accountFromDB)
+	require.Equal(t, account.ID, accountFromDB.ID)
+	require.Equal(t, account.UserID, accountFromDB.UserID)
+	require.Equal(t, account.Balance+arg.Amount, accountFromDB.Balance)
+	require.Equal(t, account.Currency, accountFromDB.Currency)
+	require.NotZero(t, account.CreatedAt)
+	require.WithinDuration(t, account.CreatedAt, accountFromDB.CreatedAt, 2*time.Second)
 }
