@@ -2,6 +2,7 @@ package db_test
 
 import (
 	"context"
+	"sync"
 	"testing"
 	"time"
 
@@ -67,12 +68,18 @@ func TestGetAccountsFromUserId(t *testing.T) {
 }
 
 func TestListAccounts(t *testing.T) {
-	var accounts []db.Account
+	var wg sync.WaitGroup
 	amountAccounts := 10
+	accounts := make([]db.Account, amountAccounts)
 
 	for i := 0; i < amountAccounts; i++ {
-		accounts = append(accounts, createRandomAccount(t, createRandomUser(t)))
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			accounts[i] = createRandomAccount(t, createRandomUser(t))
+		}(i)
 	}
+	wg.Wait()
 
 	arg := db.ListAccountsParams{
 		Limit:  int32(amountAccounts),
@@ -83,8 +90,8 @@ func TestListAccounts(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, accountFromDB)
 	require.Len(t, accountFromDB, amountAccounts)
-	for _, a := range accounts {
-		require.Contains(t, accountFromDB, a)
+	for _, acc := range accounts {
+		require.Contains(t, accountFromDB, acc)
 	}
 }
 
@@ -137,4 +144,50 @@ func TestDeleteAccount(t *testing.T) {
 	require.Error(t, err)
 	require.EqualError(t, err, pgx.ErrNoRows.Error())
 	require.Empty(t, accountFromDB)
+}
+
+func TestDeleteAllAccounts(t *testing.T) {
+	var wg sync.WaitGroup
+	amountAccounts := 10
+	accounts := make([]db.Account, amountAccounts)
+
+	for i := 0; i < amountAccounts; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			accounts[i] = createRandomAccount(t, createRandomUser(t))
+		}(i)
+	}
+	wg.Wait()
+
+	err := testStore.DeleteAllAccounts(context.Background())
+	require.NoError(t, err)
+}
+
+func TestGetAccountByAccountNumber(t *testing.T) {
+	user := createRandomUser(t)
+	account := createRandomAccount(t, user)
+	accountNumber, err := util.GenerateAccountNumber(account.ID, account.Currency)
+	require.NoError(t, err)
+	require.NotEmpty(t, accountNumber)
+
+	arg := db.UpdateAccountNumberParams{
+		ID:            account.ID,
+		AccountNumber: pgtype.Text{String: accountNumber, Valid: true},
+	}
+
+	updatedAccount, err := testStore.UpdateAccountNumber(context.Background(), arg)
+	require.NoError(t, err)
+	require.Equal(t, updatedAccount.AccountNumber.String, accountNumber)
+
+	accountFromDB, err := testStore.GetAccountByAccountNumber(context.Background(), updatedAccount.AccountNumber)
+	require.NoError(t, err)
+	require.NotEmpty(t, accountFromDB)
+	require.Equal(t, account.ID, accountFromDB.ID)
+	require.Equal(t, account.UserID, accountFromDB.UserID)
+	require.Equal(t, account.Balance, accountFromDB.Balance)
+	require.Equal(t, account.Currency, accountFromDB.Currency)
+	require.NotZero(t, account.CreatedAt)
+	require.WithinDuration(t, account.CreatedAt, accountFromDB.CreatedAt, 2*time.Second)
+
 }
